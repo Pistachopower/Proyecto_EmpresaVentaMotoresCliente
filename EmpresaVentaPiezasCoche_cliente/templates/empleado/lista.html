@@ -8,12 +8,32 @@
 {% endblock %}
 
 {% block contenido %}
+<h1 class="display-3">Lista de empleados</h1>
 
-  
-    {% for empleado  in listar_empleado %}
-        {% include 'empleado/empleado.html' %}
+{% if messages %}
+{% for message in messages %}
+    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+{% endfor %}
+{% endif %}
+
+<div class="row">
+    {% for empleado in empleados_lista_api %}
+        <div class="col-sm-4 mb-2">
+            <p>id {{empleado.id}}</p>
+            <p>empleadoUsuario {{empleado.empleadoUsuario}}</p>
+            <p>empleado {{empleado.empleado}}</p>
+            <p>apellido {{empleado.apellido}}</p>
+            <p>cargo {{empleado.cargo}}</p>
+            <p>fecha_contratacion {{empleado.fecha_contratacion}}</p>
+        
+        </div>
     {% empty %}
-        <p>No hay proveedores disponibles.</p>
+        <h1>Lo sentimos pero no hay empleados</h1>
     {% endfor %}
+</div>
+
 
 {% endblock %}

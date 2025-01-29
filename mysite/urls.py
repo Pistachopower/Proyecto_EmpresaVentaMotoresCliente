@@ -19,9 +19,10 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('EmpresaVentaPiezasCoche.urls')),
+    path('', include('EmpresaVentaPiezasCoche_cliente.urls')),
     path("__debug__/", include("debug_toolbar.urls")),
     path('accounts/', include('django.contrib.auth.urls')), #Django incluye las URLs de autenticación prediseñadas de Django en la URL
+    #path('',include("cliente_api.urls"))
 ]
 
 #handler404 = 'EmpresaVentaPiezasCoche.views.error_404_view'

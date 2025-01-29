@@ -23,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-dnl)uldle7b4%w*xw$$q_+1$fs&anh7piyz96hlwn^xy8ia*g5'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['127.0.0.1', '.pythonanywhere.com','0.0.0.0']
 
@@ -37,8 +37,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'EmpresaVentaPiezasCoche',
+    'EmpresaVentaPiezasCoche_cliente',
     'django_seed',
+    #'jquery',
     'debug_toolbar',
     'django_bootstrap5',
     'django_bootstrap_icons',
@@ -135,7 +136,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 INTERNAL_IPS = ["127.0.0.1"]
 
 #se agrega esto para la autenticacion de los usuarios
-AUTH_USER_MODEL = 'EmpresaVentaPiezasCoche.Usuario'
+#AUTH_USER_MODEL = 'EmpresaVentaPiezasCoche_cliente.Usuario'
 LOGIN_REDIRECT_URL = 'index' #redirecciona a la pagina de inicio despues de loguearse
 LOGOUT_REDIRECT_URL = 'index'
 
