@@ -127,19 +127,19 @@
             <a class="nav-link dropdown-toggle" href="#" id="piezamotorDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Piezas de motores</a>
             <ul class="dropdown-menu" aria-labelledby="piezamotorDropdown">
               <li>
-                <a class="dropdown-item" href="{% url 'listar_piezamotor' %}">Lista de piezas de motores</a>
+                <a class="dropdown-item" href="">Lista de piezas de motores</a>
               </li>
 
               {% if request.user.is_authenticated %}
               {% if request.user.rol == 1 or request.user.rol == 2 %} 
               <li>
-                <a class="dropdown-item" href="{% url 'piezamotor_create' %}">Crear pieza</a>
+                <a class="dropdown-item" href="">Crear pieza</a>
               </li>
               {% endif %}
               {% endif %}
 
               <li>
-                <a class="dropdown-item" href="{% url 'piezamotor_busqueda' %}">Buscar pieza</a>
+                <a class="dropdown-item" href="">Buscar pieza</a>
               </li>
             </ul>
           </li>
@@ -182,7 +182,7 @@
           {% endif %}
 
           {% if not request.user.is_authenticated %}
-            <a class="btn btn-outline-warning ms-1" href="{% url 'registrar_usuario' %}">Registrarse</a>
+            <a class="btn btn-outline-warning ms-1" href="">Registrarse</a>
           {% endif %}
 
           {% if request.user.is_authenticated %}

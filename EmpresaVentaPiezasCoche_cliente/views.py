@@ -10,7 +10,8 @@ def index(request):
 
 
 def empleados_lista_api(request):
-    response= requests.get('http://127.0.0.1:8000/api/v1/usuarios')
+
+    response= requests.get('http://127.0.0.1:8080/api/v1/empleados')
     
     empleados= response.json()
     
