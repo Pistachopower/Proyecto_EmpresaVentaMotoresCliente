@@ -10,6 +10,7 @@ from django.contrib.auth import views as auth_views
 urlpatterns = [
     path('', views.index, name='index'),
     path('empleados/',views.empleados_lista_api,name='empleados'),
+    path('empleados/',views.empleados_lista_api_mejorado,name='empleados'),
 
 
 ]

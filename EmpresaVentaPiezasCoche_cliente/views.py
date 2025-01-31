@@ -7,11 +7,15 @@ from django.core import serializers
 def index(request):
     return render(request, 'index.html')
 
-
-
 def empleados_lista_api(request):
-    headers= {'Authorization': 'Bearer AqWr2niC9doTnKRmpELEixGbutYxO3'} 
-    response= requests.get('http://127.0.0.1:8080/api/v1/empleados', headers=headers)
+    headers= {'Authorization': 'Bearer EDGZugJsTedxaHPwedsaaNpyizWFNn'} 
+    response= requests.get('http://127.0.0.1:8080/api/v1/empleados_mejorado', headers=headers)
+    empleados= response.json()
+    return render(request, 'empleado/lista.html', {'empleados': empleados})
+
+def empleados_lista_api_mejorado(request):
+    headers= {'Authorization': 'Bearer EDGZugJsTedxaHPwedsaaNpyizWFNn'} 
+    response= requests.get('http://127.0.0.1:8080/api/v1/empleados_mejorado', headers=headers)
     empleados= response.json()
     return render(request, 'empleado/lista.html', {'empleados': empleados})
 
