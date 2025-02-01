@@ -9,15 +9,15 @@ def index(request):
 
 def empleados_lista_api(request):
     headers= {'Authorization': 'Bearer GjhyLVBACKhAxmh2pmcjQDASr4ZYa8'} 
-    response= requests.get('http://127.0.0.1:8080/api/v1/empleados_mejorado', headers=headers)
-    empleados= response.json()
-    return render(request, 'empleado/lista.html', {'empleados': empleados})
+    response= requests.get('http://127.0.0.1:8080/api/v1/empleados', headers=headers)
+    empleados_normal= response.json()
+    return render(request, 'empleado/lista.html', {'empleados': empleados_normal})
 
 def empleados_lista_api_mejorado(request):
     headers= {'Authorization': 'Bearer GjhyLVBACKhAxmh2pmcjQDASr4ZYa8'} 
     response= requests.get('http://127.0.0.1:8080/api/v1/empleados_mejorado', headers=headers)
     empleados= response.json()
-    return render(request, 'empleado/lista.html', {'empleados': empleados})
+    return render(request, 'empleado/lista_Mejorado.html', {'empleados': empleados})
 
 
 #def empleados_lista_api(request):

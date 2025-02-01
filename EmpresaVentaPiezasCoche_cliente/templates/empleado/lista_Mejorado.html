@@ -25,7 +25,16 @@
             <p>id {{empleado.id}}</p>
 
 
-            <p>Usuario del empleado {{empleado.empleadoUsuario}}</p>
+            <p>Usuario del empleado {{empleado.empleadoUsuario.id}}</p>
+            <ul>
+                <li>Tipo de rol: {{empleado.empleadoUsuario.usename}}</li>
+                <li>rol: {{empleado.empleadoUsuario.rol}}</li>
+                <li> rol display: {{empleado.empleadoUsuario.rol_display}}</li>
+                <li>nombre: {{empleado.empleadoUsuario.nombre}}</li>
+                <li>telefono: {{empleado.empleadoUsuario.telefono}}</li>
+                <li>correo: {{empleado.empleadoUsuario.correo}}</li>
+            </ul>
+
             <p>empleado {{empleado.empleado}}</p>
             <p>apellido {{empleado.apellido}}</p>
             <p>cargo {{empleado.cargo}}</p>

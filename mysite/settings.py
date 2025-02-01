@@ -11,16 +11,25 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
+import environ #herramientas de deployment
+import os #herramientas de deployment
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
+
+#guarda la ruta del proyecto (setting.py hasta la raiz del proyecto)
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+#obtenemos el fichero .env desde la raiz del proyecto
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'),True)
+
+#creamos un objeto que nos permite acceder a los valores del fichero .env
+env = environ.Env()
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-dnl)uldle7b4%w*xw$$q_+1$fs&anh7piyz96hlwn^xy8ia*g5'
+#obtenemos el valor accediendo al fichero .env y obtenemos el valor de SECRET_KEY
+SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
