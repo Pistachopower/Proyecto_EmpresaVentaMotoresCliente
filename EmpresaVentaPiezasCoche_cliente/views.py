@@ -8,25 +8,29 @@ def index(request):
     return render(request, 'index.html')
 
 def empleados_lista_api(request):
-    headers= {'Authorization': 'Bearer GjhyLVBACKhAxmh2pmcjQDASr4ZYa8'} 
-    response= requests.get('http://127.0.0.1:8080/api/v1/empleados', headers=headers)
+    #header=  se refiere para acceder a la api y al servidor
+    headers= {'Authorization': 'Bearer rLQVyR2o9wjs1DO7f0jDcn3j9xWOHG'} 
+    
+    #http://127.0.0.1:8080/api/v1/empleados: esto hace referencia a la url de la api 
+    response= requests.get('http://127.0.0.1:8080/api/v1/empleados', headers=headers) #aqui llamas a la url de la api
     empleados_normal= response.json()
     return render(request, 'empleado/lista.html', {'empleados': empleados_normal})
 
 def empleados_lista_api_mejorado(request):
-    headers= {'Authorization': 'Bearer GjhyLVBACKhAxmh2pmcjQDASr4ZYa8'} 
+    headers= {'Authorization': 'Bearer rLQVyR2o9wjs1DO7f0jDcn3j9xWOHG'} 
     response= requests.get('http://127.0.0.1:8080/api/v1/empleados_mejorado', headers=headers)
     empleados= response.json()
     return render(request, 'empleado/lista_Mejorado.html', {'empleados': empleados})
 
+def listar_clientes_mejorado(request):
+    headers= {'Authorization': 'Bearer rLQVyR2o9wjs1DO7f0jDcn3j9xWOHG'} 
+    response= requests.get('http://127.0.0.1:8080/api/v1/clientes_mejorado', headers=headers)
+    cliente= response.json()
+    return render(request, 'cliente/lista_Mejorado.html', {'cliente_mejorado': cliente})
 
-#def empleados_lista_api(request):
-#    # obtenemos todos los libros
-#    headers = {'Authorization': 'Bearer '+ env('token')} 
-#    headers = {'Authorization': 'Bearer '+request.session["token"]} 
-#    print(headers)
-#    response = requests.get('http://127.0.0.1:8000/api/v1/libros',headers=headers)
-#   # Transformamos la respuesta en json
-#    libros = response.json()
-#    #return render(request, 'libro/lista.html',{"libros_mostrar":libros})
-#    return render(request, 'libro/lista_mejorada.html',{"libros_mostrar":libros})
+
+def listar_pedido_mejorado(request):
+    headers= {'Authorization': 'Bearer rLQVyR2o9wjs1DO7f0jDcn3j9xWOHG'} 
+    response= requests.get('http://127.0.0.1:8080/api/v1/pedido_mejorado', headers=headers)
+    pedido= response.json()
+    return render(request, 'pedido/lista_Mejorado.html', {'pedido_mejorado': pedido})
