@@ -7,9 +7,17 @@ from django.core import serializers
 def index(request):
     return render(request, 'index.html')
 
+
 def empleados_lista_api(request):
     #header=  se refiere para acceder a la api y al servidor
     headers= {'Authorization': 'Bearer rLQVyR2o9wjs1DO7f0jDcn3j9xWOHG'} 
+    
+
+#JWT: JSON WEB TOKEN
+def empleados_lista_api(request):
+    #header=  se refiere para acceder a la api y al servidor
+    headers= {'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM4NTI3NDg0LCJpYXQiOjE3Mzg1MjM4ODQsImp0aSI6IjFiMzc2NDgyMTE4OTQyZjJiYjAzNjY5Mjc0YjgwZjQ0IiwidXNlcl9pZCI6OX0.H-5tMoGlUMhcA9wBWdvorMH8XEOJOZxpkZ7XXm-MNtI'} 
+
     
     #http://127.0.0.1:8080/api/v1/empleados: esto hace referencia a la url de la api 
     response= requests.get('http://127.0.0.1:8080/api/v1/empleados', headers=headers) #aqui llamas a la url de la api
