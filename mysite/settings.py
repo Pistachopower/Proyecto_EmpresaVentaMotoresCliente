@@ -25,9 +25,6 @@ environ.Env.read_env(os.path.join(BASE_DIR, '.env'),True)
 env = environ.Env()
 
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
-
 #obtenemos el valor accediendo al fichero .env y obtenemos el valor de SECRET_KEY
 SECRET_KEY = env('SECRET_KEY')
 
