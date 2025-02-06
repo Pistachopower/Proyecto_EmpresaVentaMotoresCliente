@@ -13,5 +13,8 @@ urlpatterns = [
     path('empleados_mejorado/',views.empleados_lista_api_mejorado,name='empleados_mejorado'),
     path('clientes_mejorado/',views.listar_clientes_mejorado,name='cliente_mejorado'),
     path('pedido_mejorado/',views.listar_pedido_mejorado,name='pedido_mejorado'),
+    
+    #busqueda
+    path('busquedasimpleempleados/',views.busquedaSimpleEmpleado,name='busquedaSimpleEmpleado'),
 
 ]

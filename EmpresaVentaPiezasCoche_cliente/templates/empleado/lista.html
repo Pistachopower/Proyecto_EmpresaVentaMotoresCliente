@@ -19,6 +19,17 @@
 {% endfor %}
 {% endif %}
 
+<!--Formulario de búsquedas-->
+<h1 class="display-3">Buscar Empleado</h1>
+<form method="GET" class="mb-4" action = "{% url 'busquedaSimpleEmpleado' %}">
+    <div class="input-group">
+        <input type="text" name="textoBusqueda" value="{{ request.GET.textoBusqueda }}" class="form-control" placeholder="" aria-label="">
+        <button type="submit" class="btn btn-primary">Buscar</button>
+    </div>
+</form>
+
+<!--Resultados de búsquedas-->
+
 <div class="row">
     {% for empleado in empleados%}
         <div class="col-sm-4 mb-2">
