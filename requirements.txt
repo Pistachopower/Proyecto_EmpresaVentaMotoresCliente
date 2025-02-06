@@ -7,3 +7,5 @@ django-bootstrap-icons~=0.8.6
 djangorestframework~=3.14.0
 requests~=2.31.0 #para la api
 django-environ~=0.11.2 
+
+#0eRLQm0yVN3346rkzVB01b4MX2tvC8
