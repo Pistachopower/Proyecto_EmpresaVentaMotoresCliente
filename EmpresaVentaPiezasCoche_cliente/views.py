@@ -61,15 +61,41 @@ def crear_cabecera():
 
 
 #busqueda simple empleados
-def busquedaSimpleEmpleado(request):
-    #obtenemos el formulario
-    formulario = BusquedaEmpleadoForm(request.GET)
+# def busquedaSimpleEmpleado(request):
+#     #obtenemos el formulario
+#     formulario = BusquedaEmpleadoForm(request.GET)
      
 
-    if formulario.is_valid():
+#     if formulario.is_valid():
+#         #objeto que contiene el token
+#         headers= crear_cabecera()
+#         response = requests.get(
+#             'http://127.0.0.1:8080/api/v1/busquedasimpleempleados',
+#             headers=headers,
+#             params={'textoBusqueda': formulario.data.get("textoBusqueda")}
+#         )
+    
+#         empleados= response.json()
+#         return render(request, 'empleado/lista.html', {'empleados': empleados})
+    
+#      # Redirigir si el formulario no es válido
+#     if "HTTP_REFERER" in request.META:
+#         return redirect(request.META["HTTP_REFERER"])
+#     else:
+#         return redirect("principal")
+
+
+def busquedaSimpleEmpleado(request):
+    print(request.GET)
+    
+    if(len(request.GET) > 0):
+        #obtenemos el formulario
+        formulario = BusquedaEmpleadoForm(request.GET)
+        
+        if formulario.is_valid():
         #objeto que contiene el token
-        headers= crear_cabecera()
-        response = requests.get(
+            headers= crear_cabecera()
+            response = requests.get(
             'http://127.0.0.1:8080/api/v1/busquedasimpleempleados',
             headers=headers,
             params={'textoBusqueda': formulario.data.get("textoBusqueda")}
@@ -77,9 +103,7 @@ def busquedaSimpleEmpleado(request):
     
         empleados= response.json()
         return render(request, 'empleado/lista.html', {'empleados': empleados})
-    
-     # Redirigir si el formulario no es válido
-    if "HTTP_REFERER" in request.META:
-        return redirect(request.META["HTTP_REFERER"])
+        
     else:
-        return redirect("principal")
+        empleados = None
+    return render(request, 'empleado/lista.html', {'empleados': empleados})
