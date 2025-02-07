@@ -16,5 +16,7 @@ urlpatterns = [
     
     #busqueda
     path('busquedasimpleempleados/',views.busquedaSimpleEmpleado,name='busquedaSimpleEmpleado'),
+    
+    path('busqueda-avanzada-empleados/',views.busquedaAvanzadaEmpleado,name='busquedaAvanzadaEmpleado'),
 
 ]
