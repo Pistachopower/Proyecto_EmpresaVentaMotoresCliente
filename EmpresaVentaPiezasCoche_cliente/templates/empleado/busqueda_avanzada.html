@@ -1,56 +1,59 @@
 {% extends 'principal.html' %}
 
 {% block contenido %}
-{% load django_bootstrap5 %}
-<h1>Búsqueda Avanzada de empleado</h1>
+  {% load django_bootstrap5 %}
+  <h1>Búsqueda Avanzada de empleado</h1>
 
-<form method="GET" action="{% url 'busquedaAvanzadaEmpleado' %}">
+  <form method="GET" action="{% url 'busquedaAvanzadaEmpleado' %}">
     {% csrf_token %}
-    
+
     <!-- Campo de búsqueda por código de empleado -->
     <div class="mb-4">
-        {% bootstrap_field formulario.empleado show_label=True %}
+      {% bootstrap_field formulario.empleado show_label=True %}
     </div>
 
     <!-- Campo de búsqueda apellido -->
     <div class="mb-4">
-        {% bootstrap_field formulario.apellido show_label=True %}
+      {% bootstrap_field formulario.apellido show_label=True %}
     </div>
-    
+
     <!-- Campo de búsqueda por cargo -->
     <div class="mb-4">
-        {% bootstrap_field formulario.cargo show_label=True %}
+      {% bootstrap_field formulario.cargo show_label=True %}
     </div>
 
     <div class="mb-4">
-        {% bootstrap_field formulario.fecha_contratacion show_label=True %}
+      {% bootstrap_field formulario.fecha_contratacion show_label=True %}
     </div>
 
     <button type="submit" class="btn btn-primary">Buscar empleado avanzado</button>
-</form>
+  </form>
 
-{% comment %} <h2 class="mt-4">Errores: {%errores%}</h2> {% endcomment %}
-
-{% comment %} {% if true %} {% endcomment %}
-    <h2 class="mt-4">Resultados de la Búsqueda</h2>
-    <div class="row">
-        {% for empleado in empleados %}
-        <div class="col-sm-4 mb-4">
-            <div class="card">
-                <div class="card-body">
-                    <h4 class="card-title mb-3">Nombre del empleado: {{ empleado.empleado }}</h4>
-                    <p class="card-text"><strong>Apellido del empleado:</strong> {{ empleado.apellido }}</p>
-                </div>
-            </div>
+  <h2 class="mt-4">Resultados de la Búsqueda</h2>
+  <div class="row">
+    {% for empleado in empleados %}
+      <div class="col-sm-4 mb-4">
+        <div class="card">
+          <div class="card-body">
+            <h4 class="card-title mb-3">Nombre del empleado: {{ empleado.empleado }}</h4>
+            <p class="card-text">
+              <strong>Apellido del empleado:</strong> {{ empleado.apellido }}
+            </p>
+            <p class="card-text">
+              <strong>Cargo del empleado:</strong> {{ empleado.cargo }}
+            </p>
+            <p class="card-text">
+              <strong>Fecha del empleado:</strong> {{ empleado.fecha_contratacion }}
+            </p>
+          </div>
         </div>
+      </div>
     {% empty %}
-        <div class="col-12">
-            <div class="alert alert-warning" role="alert">
-                No se encontraron reservas que coincidan con la búsqueda.
-            </div>
-        </div>
+      <div class="col-12">
+        <div class="alert alert-warning" role="alert">No se encontraron empleados que coincidan con la búsqueda.</div>
+      </div>
     {% endfor %}
-    </div>
-{% comment %} {% endif %} {% endcomment %}
-{% endblock %} 
+  </div>
 
+  {% comment %} {% endif %} {% endcomment %}
+{% endblock %}

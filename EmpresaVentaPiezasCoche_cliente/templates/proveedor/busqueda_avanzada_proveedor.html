@@ -1,0 +1,51 @@
+{% extends 'principal.html' %}
+
+{% block contenido %}
+  {% load django_bootstrap5 %}
+  <h1>Búsqueda Avanzada de proveedor</h1>
+
+  <form method="GET" action="{% url 'busquedaAvanzadaProveedor' %}">
+    {% csrf_token %}
+
+
+    <div class="mb-4">
+      {% bootstrap_field formulario.proveedor show_label=True %}
+    </div>
+
+
+    <div class="mb-4">
+      {% bootstrap_field formulario.telefono show_label=True %}
+    </div>
+
+    <div class="mb-4">
+      {% bootstrap_field formulario.correo show_label=True %}
+    </div>
+
+    <button type="submit" class="btn btn-primary">Buscar proveedor avanzado</button>
+  </form>
+
+  <h2 class="mt-4">Resultados de la Búsqueda</h2>
+  <div class="row">
+    {% for pro in proveedor %}
+      <div class="col-sm-4 mb-4">
+        <div class="card">
+          <div class="card-body">
+            <h4 class="card-title mb-3">Nombre del proveedor: {{ pro.proveedor }}</h4>
+            <p class="card-text">
+              <strong>Teléfono del proveedor:</strong> {{ pro.telefono }}
+            </p>
+            <p class="card-text">
+              <strong>Correo:</strong> {{ pro.correo }}
+            </p>
+          </div>
+        </div>
+      </div>
+    {% empty %}
+      <div class="col-12">
+        <div class="alert alert-warning" role="alert">No se encontraron empleado que coincidan con la búsqueda.</div>
+      </div>
+    {% endfor %}
+  </div>
+
+  {% comment %} {% endif %} {% endcomment %}
+{% endblock %}

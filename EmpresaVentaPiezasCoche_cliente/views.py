@@ -71,8 +71,6 @@ def crear_cabecera():
     }
 
 
-
-
 def busquedaSimpleEmpleado(request):
     print(request.GET)
 
@@ -98,13 +96,13 @@ def busquedaSimpleEmpleado(request):
 
 
 def busquedaAvanzadaEmpleado(request):
-    
+
     print(request.GET)
-    
+
     if len(request.GET) > 0:
 
         formulario = BusquedaAvanzadaEmpleadoForm(request.GET)
-        
+
         if formulario.is_valid():
             try:
                 # objeto que contiene el token
@@ -113,43 +111,218 @@ def busquedaAvanzadaEmpleado(request):
                 response = requests.get(
                     "http://127.0.0.1:8080/api/v1/busqueda-avanzada-empleados",
                     headers=headers,
-                    params= formulario.cleaned_data  # Pasar los datos del formulario validados
+                    params=formulario.cleaned_data,  # Pasar los datos del formulario validados
                 )
-                
-                print("🔍 Respuesta del servidor:", response.status_code, response.text)
-                
+
                 if response.status_code == requests.codes.ok:
                     empleados = response.json()  # Obtenemos los datos en formato json
-                    print("🔍 Datos recibidos:", empleados)  # Verifica que los datos llegan correctamente
-                    return render(request, 'empleado/busqueda_avanzada.html', {"formulario": formulario,"empleados": empleados})
+                    return render(
+                        request,
+                        "empleado/busqueda_avanzada.html",
+                        {"formulario": formulario, "empleados": empleados},
+                    )
                 else:
                     print(response.status_code)
-                    response.raise_for_status() 
-                
+                    response.raise_for_status()
 
             except HTTPError as http_err:
-                print(f'Hubo un error en la petición: {http_err}')
+                print(f"Hubo un error en la petición: {http_err}")
                 if response.status_code == 400:
                     errores = response.json()
+                    print(errores)
                     for error in errores:
-                        formulario.add_error(error, errores[error])  # Agregar los errores del formulario
-                    return render(request, 'empleado/busqueda_avanzada.html', {"formulario": formulario, "errores": errores})
+                        formulario.add_error(
+                            error, errores[error]
+                        )  # Agregar los errores del formulario
+                    return render(
+                        request,
+                        "empleado/busqueda_avanzada.html",
+                        {"formulario": formulario},
+                    )
                 else:
                     return error_500(request)  # Retornar una página de error 500
             except Exception as err:
-                print(f'Ocurrió un error: {err}')
+                print(f"Ocurrió un error: {err}")
                 return error_500(request)
 
     else:
         formulario = BusquedaAvanzadaEmpleadoForm(None)
-    return render(request, "empleado/busqueda_avanzada.html", {"formulario": formulario})
+    return render(
+        request, "empleado/busqueda_avanzada.html", {"formulario": formulario}
+    )
+    
+    
+def busquedaAvanzadaClientes(request):
+
+    if len(request.GET) > 0:
+
+        formulario = BusquedaAvanzadaClientesForm(request.GET)
+
+        if formulario.is_valid():
+            try:
+                # objeto que contiene el token
+                headers = crear_cabecera()
+
+                response = requests.get(
+                    "http://127.0.0.1:8080/api/v1/busqueda-avanzada-clientes",
+                    headers=headers,
+                    params=formulario.cleaned_data,  # Pasar los datos del formulario validados
+                )
+
+                if response.status_code == requests.codes.ok:
+                    clientes = response.json()  # Obtenemos los datos en formato json
+                    return render(
+                        request,
+                        "cliente/busqueda_avanzada_cliente.html",
+                        {"formulario": formulario, "clientes": clientes},
+                    )
+                else:
+                    print(response.status_code)
+                    response.raise_for_status()
+
+            except HTTPError as http_err:
+                #print(f"Hubo un error en la petición: {http_err}")
+                if response.status_code == 400:
+                    errores = response.json()
+                    
+                    for error in errores:
+                        formulario.add_error(
+                            error, errores[error]
+                        )  # Agrega los errores del formulario
+                    return render(
+                        request,"cliente/busqueda_avanzada_cliente.html",{"formulario": formulario},
+                    )
+                else:
+                    return error_500(request)  # Retornar una página de error 500
+            except Exception as err:
+                print(f"Ocurrió un error: {err}")
+                return error_500(request)
+
+    else:
+        formulario = BusquedaAvanzadaClientesForm(None)
+    return render(
+        request, "cliente/busqueda_avanzada_cliente.html", {"formulario": formulario}
+    )
+
+#busquedaAvanzadaPedidos
+def busquedaAvanzadaPedidos(request):
+
+    if len(request.GET) > 0:
+
+        formulario = BusquedaAvanzadaPedidoForm(request.GET)
+        
+        print(str("ESTO ES LO QUE TIENE ANTES EL FORMULARRIO"), formulario)
+
+        if formulario.is_valid():
+            try:
+                # objeto que contiene el token
+                headers = crear_cabecera()
+                print(str("ESTO ES LO QUE TIENE ANTES EL FORMULARRIO"), formulario.cleaned_data)
+                response = requests.get(
+                    "http://127.0.0.1:8080/api/v1/busqueda-avanzada-pedidos",
+                    headers=headers,
+                    params=formulario.cleaned_data,  # Pasar los datos del formulario validados
+                )
+                
+                print(str("ESTE ES LA RESPUESTA DEL SERVIDOR"), response)
+                
+
+                if response.status_code == requests.codes.ok:
+                    pedidos = response.json()  # Obtenemos los datos en formato json
+                    return render(
+                        request,
+                        "pedido/busqueda_avanzada_pedidos.html",
+                        {"formulario": formulario, "pedidos": pedidos},
+                    )
+                else:
+                    print(response.status_code)
+                    response.raise_for_status()
+
+            except HTTPError as http_err:
+                #print(f"Hubo un error en la petición: {http_err}")
+                if response.status_code == 400:
+                    errores = response.json()
+                    
+                    for error in errores:
+                        formulario.add_error(
+                            error, errores[error]
+                        )  # Agrega los errores del formulario
+                    return render(
+                        request,"pedido/busqueda_avanzada_pedidos.html",{"formulario": formulario},
+                    )
+                else:
+                    return error_500(request)  # Retornar una página de error 500
+            except Exception as err:
+                print(f"Ocurrió un error: {err}")
+                return error_500(request)
+
+    else:
+        formulario = BusquedaAvanzadaPedidoForm(None)
+    return render(
+        request, "pedido/busqueda_avanzada_pedidos.html", {"formulario": formulario})
+
+
+def busquedaAvanzadaProveedor(request):
+
+    if len(request.GET) > 0:
+
+        formulario = BusquedaAvanzadaProveedorForm(request.GET)
+        
+
+        if formulario.is_valid():
+            try:
+                # objeto que contiene el token
+                headers = crear_cabecera()
+                response = requests.get(
+                    "http://127.0.0.1:8080/api/v1/busqueda-avanzada-proveedor",
+                    headers=headers,
+                    params=formulario.cleaned_data,  # Pasar los datos del formulario validados
+                )
+                
+                
+
+                if response.status_code == requests.codes.ok:
+                    proveedor = response.json()  # Obtenemos los datos en formato json
+                    return render(
+                        request,
+                        "proveedor/busqueda_avanzada_proveedor.html",
+                        {"formulario": formulario, "proveedor": proveedor},
+                    )
+                else:
+                    print(response.status_code)
+                    response.raise_for_status()
+
+            except HTTPError as http_err:
+                #print(f"Hubo un error en la petición: {http_err}")
+                if response.status_code == 400:
+                    errores = response.json()
+                    
+                    for error in errores:
+                        formulario.add_error(
+                            error, errores[error]
+                        )  # Agrega los errores del formulario
+                    return render(
+                        request,"proveedor/busqueda_avanzada_proveedor.html",{"formulario": formulario},
+                    )
+                else:
+                    return error_500(request)  # Retornar una página de error 500
+            except Exception as err:
+                print(f"Ocurrió un error: {err}")
+                return error_500(request)
+
+    else:
+        formulario = BusquedaAvanzadaProveedorForm(None)
+    return render(
+        request, "proveedor/busqueda_avanzada_proveedor.html", {"formulario": formulario})
 
 
 
-#Páginas de Error
-def error_404(request,exception=None):
-    return render(request, 'errores/404.html',None,None,404)
 
-#Páginas de Error
-def error_500(request,exception=None):
-    return render(request, 'errores/500.html',None,None,500)
+# Páginas de Error
+def error_404(request, exception=None):
+    return render(request, "errores/404.html", None, None, 404)
+
+
+# Páginas de Error
+def error_500(request, exception=None):
+    return render(request, "errores/500.html", None, None, 500)

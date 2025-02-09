@@ -1,0 +1,53 @@
+{% extends 'principal.html' %}
+
+{% block contenido %}
+  {% load django_bootstrap5 %}
+  <h1>Búsqueda Avanzada de clientes</h1>
+
+  <form method="GET" action="{% url 'busquedaAvanzadaClientes' %}">
+    {% csrf_token %}
+
+    <!-- Campo de búsqueda por código de clientes -->
+    <div class="mb-4">
+      {% bootstrap_field formulario.cliente show_label=True %}
+    </div>
+
+    <!-- Campo de búsqueda apellido -->
+    <div class="mb-4">
+      {% bootstrap_field formulario.apellido show_label=True %}
+    </div>
+
+    <!-- Campo de búsqueda por cargo 
+    -->
+    <div class="mb-4">
+      {% bootstrap_field formulario.tipo_clientes show_label=True %}
+    </div>
+
+    <button type="submit" class="btn btn-primary">Buscar clientes avanzado</button>
+  </form>
+
+  <h2 class="mt-4">Resultados de la Búsqueda</h2>
+  <div class="row">
+    {% for cliente in clientes %}
+      <div class="col-sm-4 mb-4">
+        <div class="card">
+          <div class="card-body">
+            <h4 class="card-title mb-3">Nombre del cliente: {{ cliente.cliente }}</h4>
+            <p class="card-text">
+              <strong>Apellido del cliente:</strong> {{ cliente.apellido }}
+            </p>
+            <p class="card-text">
+              <strong>Tipo de cliente:</strong> {{ cliente.tipo_clientes }}
+            </p>
+          </div>
+        </div>
+      </div>
+    {% empty %}
+      <div class="col-12">
+        <div class="alert alert-warning" role="alert">No se encontraron clientes que coincidan con la búsqueda.</div>
+      </div>
+    {% endfor %}
+  </div>
+
+  {% comment %} {% endif %} {% endcomment %}
+{% endblock %}

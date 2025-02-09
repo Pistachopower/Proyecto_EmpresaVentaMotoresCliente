@@ -18,5 +18,7 @@ urlpatterns = [
     path('busquedasimpleempleados/',views.busquedaSimpleEmpleado,name='busquedaSimpleEmpleado'),
     
     path('busqueda-avanzada-empleados/',views.busquedaAvanzadaEmpleado,name='busquedaAvanzadaEmpleado'),
-
+    path('busqueda-avanzada-clientes/',views.busquedaAvanzadaClientes,name='busquedaAvanzadaClientes'),
+    path('busqueda-avanzada-pedidos/',views.busquedaAvanzadaPedidos,name='busquedaAvanzadaPedidos'),
+    path('busqueda-avanzada-proveedor/',views.busquedaAvanzadaProveedor,name='busquedaAvanzadaProveedor'),
 ]
