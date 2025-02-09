@@ -13,6 +13,9 @@ environ.Env.read_env(os.path.join(BASE_DIR, ".env"), True)
 env = environ.Env()
 
 
+#definimos la url para la configuracion de la api
+BASE_URL = "http://127.0.0.1:8080/api/v1/"
+
 # Create your views here.
 def index(request):
     return render(request, "index.html")
@@ -70,7 +73,7 @@ def crear_cabecera():
         "Content-Type": "application/json",
     }
 
-
+#tengo que buscar apellido o cargo
 def busquedaSimpleEmpleado(request):
     print(request.GET)
 
@@ -82,7 +85,7 @@ def busquedaSimpleEmpleado(request):
             # objeto que contiene el token
             headers = crear_cabecera()
             response = requests.get(
-                "http://127.0.0.1:8080/api/v1/busquedasimpleempleados",
+                f"{BASE_URL}busquedasimpleempleados/",
                 headers=headers,
                 params={"textoBusqueda": formulario.data.get("textoBusqueda")},
             )

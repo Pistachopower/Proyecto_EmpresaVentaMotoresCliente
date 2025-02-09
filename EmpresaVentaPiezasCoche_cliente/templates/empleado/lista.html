@@ -23,7 +23,7 @@
 <h1 class="display-3">Buscar Empleado</h1>
 <form method="GET" class="mb-4" action = "{% url 'busquedaSimpleEmpleado' %}">
     <div class="input-group">
-        <input type="text" name="textoBusqueda" value="{{ request.GET.textoBusqueda }}" class="form-control" placeholder="" aria-label="">
+        <input type="text" placeholder="Debes colocar el apellido o cargo" name="textoBusqueda" value="{{ request.GET.textoBusqueda }}" class="form-control" placeholder="" aria-label="">
         <button type="submit" class="btn btn-primary">Buscar</button>
     </div>
 </form>
@@ -36,7 +36,7 @@
             <p>id {{empleado.id}}</p>
 
 
-            <p>Usuario del empleado {{empleado.empleadoUsuario}}</p>
+            <p>Usuario del empleado {{empleado.empleadoUsuario.username}}</p>
             <p>empleado {{empleado.empleado}}</p>
             <p>apellido {{empleado.apellido}}</p>
             <p>cargo {{empleado.cargo}}</p>
