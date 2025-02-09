@@ -112,7 +112,7 @@ def busquedaAvanzadaEmpleado(request):
                 headers = crear_cabecera()
 
                 response = requests.get(
-                    "http://127.0.0.1:8080/api/v1/busqueda-avanzada-empleados",
+                    f"{BASE_URL}busqueda-avanzada-empleados",
                     headers=headers,
                     params=formulario.cleaned_data,  # Pasar los datos del formulario validados
                 )
@@ -167,7 +167,7 @@ def busquedaAvanzadaClientes(request):
                 headers = crear_cabecera()
 
                 response = requests.get(
-                    "http://127.0.0.1:8080/api/v1/busqueda-avanzada-clientes",
+                    f"{BASE_URL}busqueda-avanzada-clientes",
                     headers=headers,
                     params=formulario.cleaned_data,  # Pasar los datos del formulario validados
                 )
@@ -213,16 +213,13 @@ def busquedaAvanzadaPedidos(request):
     if len(request.GET) > 0:
 
         formulario = BusquedaAvanzadaPedidoForm(request.GET)
-        
-        print(str("ESTO ES LO QUE TIENE ANTES EL FORMULARRIO"), formulario)
 
         if formulario.is_valid():
             try:
                 # objeto que contiene el token
                 headers = crear_cabecera()
-                print(str("ESTO ES LO QUE TIENE ANTES EL FORMULARRIO"), formulario.cleaned_data)
                 response = requests.get(
-                    "http://127.0.0.1:8080/api/v1/busqueda-avanzada-pedidos",
+                    f"{BASE_URL}busqueda-avanzada-pedidos",
                     headers=headers,
                     params=formulario.cleaned_data,  # Pasar los datos del formulario validados
                 )
@@ -277,7 +274,7 @@ def busquedaAvanzadaProveedor(request):
                 # objeto que contiene el token
                 headers = crear_cabecera()
                 response = requests.get(
-                    "http://127.0.0.1:8080/api/v1/busqueda-avanzada-proveedor",
+                    f"{BASE_URL}busqueda-avanzada-proveedor",
                     headers=headers,
                     params=formulario.cleaned_data,  # Pasar los datos del formulario validados
                 )
