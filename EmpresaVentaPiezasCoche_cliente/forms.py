@@ -4,6 +4,16 @@ from datetime import datetime, date
 class BusquedaEmpleadoForm(forms.Form):
     textoBusqueda = forms.CharField(required=False, label="Buscar Empleado")
     
+    def clean(self):
+        cleaned_data = super().clean()
+
+        textoBusqueda = cleaned_data.get("textoBusqueda")
+        
+        if not textoBusqueda:
+            raise forms.ValidationError("Debe introducir un texto de búsqueda")        
+       
+        return cleaned_data
+    
 class BusquedaAvanzadaEmpleadoForm(forms.Form):
     empleado= forms.CharField(required=False, label="Nombre del empleado")
     apellido= forms.CharField(required=False, label="Apellido del empleado")
