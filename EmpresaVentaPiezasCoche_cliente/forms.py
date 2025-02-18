@@ -40,3 +40,25 @@ class BusquedaAvanzadaProveedorForm(forms.Form):
     proveedor = forms.CharField(required=False, label="Nombre del proveedor")
     telefono = forms.CharField(required=False, label="telefono del proveedor")
     correo = forms.CharField(required=False, label="correo del proveedor")
+    
+    
+    
+#Formulario post, patch, 
+class ProveedoresForm(forms.Form):
+    proveedor = forms.CharField(label="Nombre del proveedor",
+                             required=True, 
+                             max_length=200,
+                             help_text="200 caracteres como máximo")
+    
+    telefono = forms.CharField(label="Teléfono",
+                                  required=False,
+                                  widget=forms.Textarea())
+    
+    correo = forms.CharField(label="Correo",
+                                        initial=datetime.date.today,
+                                        widget= forms.SelectDateWidget(years=range(1990,2025))
+                                        )
+    
+
+    direccion = forms.CharField()
+    
