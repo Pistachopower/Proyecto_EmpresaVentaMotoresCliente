@@ -14,7 +14,7 @@ env = environ.Env()
 
 
 #definimos la url para la configuracion de la api
-BASE_URL = "http://127.0.0.1:8080/api/v1/"
+BASE_URL = "http://127.0.0.1:8081/api/v1/"
 
 # Create your views here.
 def index(request):
@@ -61,7 +61,7 @@ def listar_clientes_mejorado(request):
 def listar_pedido_mejorado(request):
     headers = {"Authorization": "Bearer 8qmTvt9IQ3h3tuDjPBjQbyMNEfRvk7"}
     response = requests.get(
-        "http://127.0.0.1:8080/api/v1/pedido_mejorado", headers=headers
+        "http://127.0.0.1:8081/api/v1/pedido_mejorado", headers=headers
     )
     pedido = response.json()
     return render(request, "pedido/lista_Mejorado.html", {"pedido_mejorado": pedido})
