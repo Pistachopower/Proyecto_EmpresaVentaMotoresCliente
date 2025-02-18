@@ -75,7 +75,6 @@ def crear_cabecera():
 
 #tengo que buscar apellido o cargo
 def busquedaSimpleEmpleado(request):
-    print(request.GET)
 
     if len(request.GET) > 0:
         # obtenemos el formulario
@@ -90,69 +89,58 @@ def busquedaSimpleEmpleado(request):
                 params={"textoBusqueda": formulario.data.get("textoBusqueda")},
             )
 
-        empleados = response.json()
-        return render(request, "empleado/lista.html", {"empleados": empleados})
+            empleados = response.json()
+            return render(request, "empleado/lista.html", {"empleados": empleados})
+        else:
+            empleados = {}
+            return render(request, "empleado/lista.html", {"empleados": empleados})
 
     else:
-        empleados = None
-    return render(request, "empleado/lista.html", {"empleados": empleados})
+        empleados = {}
+        return render(request, "empleado/lista.html", {"empleados": empleados})
 
 
 def busquedaAvanzadaEmpleado(request):
-
-    print(request.GET)
 
     if len(request.GET) > 0:
 
         formulario = BusquedaAvanzadaEmpleadoForm(request.GET)
 
-        if formulario.is_valid():
-            try:
+        
+        try:
                 # objeto que contiene el token
-                headers = crear_cabecera()
+            headers = crear_cabecera()
 
-                response = requests.get(
+            response = requests.get(
                     f"{BASE_URL}busqueda-avanzada-empleados",
                     headers=headers,
-                    params=formulario.cleaned_data,  # Pasar los datos del formulario validados
+                    params=formulario.data,  # Pasar los datos del formulario validados
                 )
 
-                if response.status_code == requests.codes.ok:
-                    empleados = response.json()  # Obtenemos los datos en formato json
-                    return render(
-                        request,
-                        "empleado/busqueda_avanzada.html",
-                        {"formulario": formulario, "empleados": empleados},
-                    )
-                else:
-                    print(response.status_code)
-                    response.raise_for_status()
+            if response.status_code == requests.codes.ok:
+                empleados = response.json()  # Obtenemos los datos en formato json
+                return render(request,"empleado/busqueda_avanzada.html",{"formulario": formulario, "empleados": empleados})
+            else:
+                response.raise_for_status()
 
-            except HTTPError as http_err:
-                print(f"Hubo un error en la petición: {http_err}")
-                if response.status_code == 400:
-                    errores = response.json()
-                    print(errores)
-                    for error in errores:
-                        formulario.add_error(
-                            error, errores[error]
-                        )  # Agregar los errores del formulario
-                    return render(
-                        request,
-                        "empleado/busqueda_avanzada.html",
-                        {"formulario": formulario},
-                    )
-                else:
-                    return error_500(request)  # Retornar una página de error 500
-            except Exception as err:
-                print(f"Ocurrió un error: {err}")
-                return error_500(request)
+        except HTTPError as http_err:
+            print(f"Hubo un error en la petición: {http_err}")
+            if response.status_code == 400:
+                errores = response.json()
+                print(errores)
+                for error in errores:
+                    formulario.add_error(error, errores[error])  # Agregar los errores del formulario
+                    return render(request,"empleado/busqueda_avanzada.html",{"formulario": formulario})
+            else:
+                return error_500(request)  # Retornar una página de error 500
+        except Exception as err:
+            print(f"Ocurrió un error: {err}")
+            return error_500(request)
 
     else:
         formulario = BusquedaAvanzadaEmpleadoForm(None)
     return render(
-        request, "empleado/busqueda_avanzada.html", {"formulario": formulario}
-    )
+        request, "empleado/busqueda_avanzada.html", {"formulario": formulario})
     
     
 def busquedaAvanzadaClientes(request):
@@ -161,29 +149,29 @@ def busquedaAvanzadaClientes(request):
 
         formulario = BusquedaAvanzadaClientesForm(request.GET)
 
-        if formulario.is_valid():
-            try:
+        
+        try:
                 # objeto que contiene el token
-                headers = crear_cabecera()
+            headers = crear_cabecera()
 
-                response = requests.get(
+            response = requests.get(
                     f"{BASE_URL}busqueda-avanzada-clientes",
                     headers=headers,
-                    params=formulario.cleaned_data,  # Pasar los datos del formulario validados
+                    params=formulario.data,  # Pasar los datos del formulario validados
                 )
 
-                if response.status_code == requests.codes.ok:
+            if response.status_code == requests.codes.ok:
                     clientes = response.json()  # Obtenemos los datos en formato json
                     return render(
                         request,
                         "cliente/busqueda_avanzada_cliente.html",
                         {"formulario": formulario, "clientes": clientes},
                     )
-                else:
-                    print(response.status_code)
-                    response.raise_for_status()
+            else:
+                    
+                response.raise_for_status()
 
-            except HTTPError as http_err:
+        except HTTPError as http_err:
                 #print(f"Hubo un error en la petición: {http_err}")
                 if response.status_code == 400:
                     errores = response.json()
@@ -197,7 +185,7 @@ def busquedaAvanzadaClientes(request):
                     )
                 else:
                     return error_500(request)  # Retornar una página de error 500
-            except Exception as err:
+        except Exception as err:
                 print(f"Ocurrió un error: {err}")
                 return error_500(request)
 
@@ -214,31 +202,29 @@ def busquedaAvanzadaPedidos(request):
 
         formulario = BusquedaAvanzadaPedidoForm(request.GET)
 
-        if formulario.is_valid():
-            try:
+
+        try:
                 # objeto que contiene el token
-                headers = crear_cabecera()
-                response = requests.get(
+            headers = crear_cabecera()
+            response = requests.get(
                     f"{BASE_URL}busqueda-avanzada-pedidos",
                     headers=headers,
-                    params=formulario.cleaned_data,  # Pasar los datos del formulario validados
+                    params=formulario.data,  # Pasar los datos del formulario validados
                 )
                 
-                print(str("ESTE ES LA RESPUESTA DEL SERVIDOR"), response)
-                
 
-                if response.status_code == requests.codes.ok:
+            if response.status_code == requests.codes.ok:
                     pedidos = response.json()  # Obtenemos los datos en formato json
                     return render(
                         request,
                         "pedido/busqueda_avanzada_pedidos.html",
                         {"formulario": formulario, "pedidos": pedidos},
                     )
-                else:
+            else:
                     print(response.status_code)
                     response.raise_for_status()
 
-            except HTTPError as http_err:
+        except HTTPError as http_err:
                 #print(f"Hubo un error en la petición: {http_err}")
                 if response.status_code == 400:
                     errores = response.json()
@@ -252,7 +238,7 @@ def busquedaAvanzadaPedidos(request):
                     )
                 else:
                     return error_500(request)  # Retornar una página de error 500
-            except Exception as err:
+        except Exception as err:
                 print(f"Ocurrió un error: {err}")
                 return error_500(request)
 
@@ -269,32 +255,32 @@ def busquedaAvanzadaProveedor(request):
         formulario = BusquedaAvanzadaProveedorForm(request.GET)
         
 
-        if formulario.is_valid():
-            try:
+
+        try:
                 # objeto que contiene el token
-                headers = crear_cabecera()
-                response = requests.get(
+            headers = crear_cabecera()
+            response = requests.get(
                     f"{BASE_URL}busqueda-avanzada-proveedor",
                     headers=headers,
-                    params=formulario.cleaned_data,  # Pasar los datos del formulario validados
+                    params=formulario.data,  # Pasar los datos del formulario validados
                 )
                 
                 
 
-                if response.status_code == requests.codes.ok:
-                    proveedor = response.json()  # Obtenemos los datos en formato json
-                    return render(
+            if response.status_code == requests.codes.ok:
+                proveedor = response.json()  # Obtenemos los datos en formato json
+                return render(
                         request,
                         "proveedor/busqueda_avanzada_proveedor.html",
                         {"formulario": formulario, "proveedor": proveedor},
                     )
-                else:
-                    print(response.status_code)
-                    response.raise_for_status()
+            else:
+                print(response.status_code)
+                response.raise_for_status()
 
-            except HTTPError as http_err:
+        except HTTPError as http_err:
                 #print(f"Hubo un error en la petición: {http_err}")
-                if response.status_code == 400:
+            if response.status_code == 400:
                     errores = response.json()
                     
                     for error in errores:
@@ -304,9 +290,9 @@ def busquedaAvanzadaProveedor(request):
                     return render(
                         request,"proveedor/busqueda_avanzada_proveedor.html",{"formulario": formulario},
                     )
-                else:
-                    return error_500(request)  # Retornar una página de error 500
-            except Exception as err:
+            else:
+                return error_500(request)  # Retornar una página de error 500
+        except Exception as err:
                 print(f"Ocurrió un error: {err}")
                 return error_500(request)
 
