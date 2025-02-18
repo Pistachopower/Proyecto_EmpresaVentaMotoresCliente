@@ -1,9 +1,12 @@
+import json
 from django.shortcuts import render, redirect
 import requests
 from django.core import serializers
 from pathlib import Path
 import environ
 import os
+
+from EmpresaVentaPiezasCoche_cliente.cliente_api import cliente_api
 from .forms import *
 from requests.exceptions import HTTPError
 
@@ -302,7 +305,95 @@ def busquedaAvanzadaProveedor(request):
         request, "proveedor/busqueda_avanzada_proveedor.html", {"formulario": formulario})
 
 
+#post, patch, delete
+def libro_crear(request):
+    
+    if (request.method == "POST"):
+        try:
+            formulario = ProveedoresForm(request.POST)
+            headers =  {
+                        'Authorization': 'Bearer '+env("TOKEN_ACCESO"),
+                        "Content-Type": "application/json" 
+                    } 
+            datos = formulario.data.copy()
+            datos["proveedor"] = request.POST.getlist("proveedor")
+            datos["telefono"] = request.POST.getlist("telefono")
+            datos["correo"] = request.POST.getlist("correo") 
+            datos["direccion"] = request.POST.getlist("direccion")                       
+    
+            response = requests.post(
+                'http://127.0.0.1:8080/api/v1/proveedores/crear',
+                headers=headers,
+                data=json.dumps(datos)
+            )
+            if(response.status_code == requests.codes.ok):
+                return redirect("index")
+            else:
+                print(response.status_code)
+                response.raise_for_status()
+        except HTTPError as http_err:
+            print(f'Hubo un error en la petición: {http_err}')
+            if(response.status_code == 400):
+                errores = response.json()
+                for error in errores:
+                    formulario.add_error(error,errores[error])
+                return render(request, 
+                            'proveedor/crear.html',
+                            {"formulario":formulario})
+            else:
+                return error_500(request)
+        except Exception as err:
+            print(f'Ocurrió un error: {err}')
+            return error_500(request)
+        
+    else:
+         formulario = ProveedoresForm(None)
+    return render(request, 'proveedor/crear.html',{"formulario":formulario})
 
+
+
+def proveedores_editar_put(request,proveedor_id):
+   
+    datosFormulario = None
+    
+    if request.method == "POST":
+        datosFormulario = request.POST
+    
+    proveedor = helper.obtener_proveedor(proveedor_id)
+    formulario = ProveedoresForm(datosFormulario,
+            initial={
+                'proveedor': proveedor['proveedor'],
+                'telefono': proveedor["telefono"],
+                'correo': proveedor['correo'],
+                'direccion': proveedor['direccion'], 
+            }
+    )
+    if (request.method == "POST"):
+        formulario = ProveedoresForm(request.POST)
+        datos = request.POST.copy()
+        datos["proveedor"] = request.POST.get("proveedor")
+        datos["telefono"] = request.POST.get("telefono")
+        datos["correo"] = request.POST.get("correo") 
+        datos["direccion"] = request.POST.get("direccion")  
+        
+        
+        cliente = cliente_api(env('OAUTH2_ACCESS_TOKEN'),"PUT",'proveedores/editar/'+str(proveedor_id),datos)
+        cliente.realizar_peticion_api()
+        if(cliente.es_respuesta_correcta()):
+            return redirect("proveedores_editar_put",proveedor_id=proveedor_id)
+        else:
+            if(cliente.es_error_validacion_datos()):
+                cliente.incluir_errores_formulario(formulario)
+            else:
+                return tratar_errores(request,cliente.codigoRespuesta)
+    return render(request, 'proveedor/actualizar.html',{"formulario":formulario,"proveedor":proveedor})
+
+
+def tratar_errores(request,codigo):
+    if codigo == 404:
+        return error_404(request)
+    else:
+        return error_500(request)
 
 # Páginas de Error
 def error_404(request, exception=None):

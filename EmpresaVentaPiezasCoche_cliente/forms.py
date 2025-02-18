@@ -1,5 +1,6 @@
 from django import forms
 from datetime import datetime, date
+from .helper import helper
 
 class BusquedaEmpleadoForm(forms.Form):
     textoBusqueda = forms.CharField(required=False, label="Buscar Empleado")
@@ -50,15 +51,24 @@ class ProveedoresForm(forms.Form):
                              max_length=200,
                              help_text="200 caracteres como máximo")
     
-    telefono = forms.CharField(label="Teléfono",
-                                  required=False,
-                                  widget=forms.Textarea())
+    telefono = forms.CharField(label="telefono del proveedor",
+                             required=True, 
+                             max_length=12,
+                             help_text="12 caracteres como máximo")
     
-    correo = forms.CharField(label="Correo",
-                                        initial=datetime.date.today,
-                                        widget= forms.SelectDateWidget(years=range(1990,2025))
-                                        )
+    correo = forms.CharField(label="correo del proveedor",
+                             required=True, 
+                             max_length=20,
+                             help_text="20 caracteres como máximo")
     
 
-    direccion = forms.CharField()
+    direccion = forms.CharField(label="direccion del proveedor",
+                             required=True, 
+                             max_length=20,
+                             help_text="20 caracteres como máximo")
+    
+
+        
+
+        
     

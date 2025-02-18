@@ -21,4 +21,9 @@ urlpatterns = [
     path('busqueda-avanzada-clientes/',views.busquedaAvanzadaClientes,name='busquedaAvanzadaClientes'),
     path('busqueda-avanzada-pedidos/',views.busquedaAvanzadaPedidos,name='busquedaAvanzadaPedidos'),
     path('busqueda-avanzada-proveedor/',views.busquedaAvanzadaProveedor,name='busquedaAvanzadaProveedor'),
+    
+    #post, patch, put, delete
+    path('proveedores/crear',views.libro_crear,name='libro_crear'),
+    path('proveedores/editar/<int:proveedor_id>',views.proveedores_editar_put,name='proveedores_editar_put'),
+
 ]
