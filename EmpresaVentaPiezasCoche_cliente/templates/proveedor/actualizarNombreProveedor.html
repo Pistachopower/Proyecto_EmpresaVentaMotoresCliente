@@ -1,0 +1,19 @@
+{% extends "principal.html" %}
+
+{% block contenido %}
+
+{% load django_bootstrap5 %}
+<form action = "{% url 'proveedores_editar_patch' proveedor.id %}" method = "post"> 
+    
+    {% csrf_token %} 
+
+    <div class="mb-4">
+        {% bootstrap_field formulario.proveedor show_label=True %}
+    </div>
+
+    {% bootstrap_button "Enviar" button_type="submit" button_class="btn-primary" %}
+
+</form> 
+
+
+{% endblock %}

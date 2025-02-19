@@ -27,7 +27,7 @@ class cliente_api:
     def __init__(self,token, metodo,url,datosEnvio=None,formatoRespuesta="json"):
         self.token = token        
         self.metodo = metodo   
-        self.url = url
+        self.url = url 
         self.datosEnvio = datosEnvio
         self.formatoRespuesta = formatoRespuesta
     

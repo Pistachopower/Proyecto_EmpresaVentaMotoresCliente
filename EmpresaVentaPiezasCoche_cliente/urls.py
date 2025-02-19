@@ -23,8 +23,10 @@ urlpatterns = [
     path('busqueda-avanzada-proveedor/',views.busquedaAvanzadaProveedor,name='busquedaAvanzadaProveedor'),
     
     #post, patch, put, delete
+    path('proveedores/listar/', views.proveedor_lista, name='proveedor_lista'),
     path('proveedores/crear/',views.proveedor_crear,name='proveedor_crear'),
     path('proveedores/editar/<int:proveedor_id>/',views.proveedores_editar_put,name='proveedores_editar_put'),
+    path('proveedores/editar/nombre/<int:proveedor_id>/',views.proveedores_editar_patch,name='proveedores_editar_patch'),
     path('proveedores/eliminar/<int:proveedor_id>/',views.proveedores_eliminar,name='proveedores_eliminar'),
 
 ]

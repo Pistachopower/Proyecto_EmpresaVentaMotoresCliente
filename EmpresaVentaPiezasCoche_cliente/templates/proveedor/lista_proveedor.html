@@ -1,0 +1,34 @@
+{% extends "principal.html" %}
+{% block contenido %}
+    <h1 class="display-3">Lista de proveedores</h1>
+
+    <div class="row">
+        {% for proveedor in proveedores %}
+            <div class="col-sm-4 mb-2">
+               
+                <p>Nombre: {{proveedor.proveedor}}</p>
+                <p>telefono: {{proveedor.telefono}}</p>
+                <p>idioma: {{proveedor.correo}}</p>
+                <p>descripcion: {{proveedor.direccion}}</p>
+
+                <!-- Formulario para actualizar proveedor -->
+                <form action="{% url 'proveedores_editar_put' proveedor.id %}" method="get" style="display:inline;">
+                    <button type="submit" class="btn btn-primary mb-2">Editar todos los campos</button>
+                </form>
+             
+                <!-- Formulario para actualizar proveedor por nombre -->
+                <form action="{% url 'proveedores_editar_patch' proveedor.id %}" method="get" style="display:inline;">
+                    <button type="submit" class="btn btn-primary mb-2">Editar por nombre</button>
+                </form>
+
+                <!-- Formulario para eliminar proveedor -->
+                <form action="{% url 'proveedores_eliminar' proveedor.id %}" method="post" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger mb-2">Eliminar</button>
+                </form>
+            </div>
+        {% empty %}
+            <h1>Lo sentimos pero no hay proveedores</h1>
+        {% endfor %}
+    </div>
+{% endblock %}

@@ -306,8 +306,20 @@ def busquedaAvanzadaProveedor(request):
 
 
 #post, patch, delete
+def proveedor_lista(request):
+    # obtenemos todos los libros
+    headers =  {
+                        'Authorization': 'Bearer '+env("OAUTH2_ACCESS_TOKEN"),
+                        "Content-Type": "application/json" 
+                    } 
+    print(headers)
+    response = requests.get('http://127.0.0.1:8080/api/v1/proveedores/proveedores_listar/',headers=headers)
+   # Transformamos la respuesta en json
+    proveedores = response.json()
+    return render(request, 'proveedor/lista_proveedor.html',{"proveedores":proveedores})
+
+
 def proveedor_crear(request):
-    
     if (request.method == "POST"):
         try:
             formulario = ProveedoresForm(request.POST)
@@ -351,14 +363,11 @@ def proveedor_crear(request):
     return render(request, 'proveedor/crear.html',{"formulario":formulario})
 
 
-
 def proveedores_editar_put(request,proveedor_id):
-   
-    datosFormulario = None
     
+    datosFormulario = None
     if request.method == "POST":
         datosFormulario = request.POST
-    
     proveedor = helper.obtener_proveedor(proveedor_id)
     formulario = ProveedoresForm(datosFormulario,
             initial={
@@ -375,9 +384,7 @@ def proveedores_editar_put(request,proveedor_id):
         datos["telefono"] = request.POST.get("telefono")
         datos["correo"] = request.POST.get("correo") 
         datos["direccion"] = request.POST.get("direccion")  
-        
-        
-        cliente = cliente_api(env('OAUTH2_ACCESS_TOKEN'),"PUT",'proveedores/editar/'+str(proveedor_id),datos)
+        cliente = cliente_api(env('OAUTH2_ACCESS_TOKEN'),"PUT",'proveedores/editar/'+str(proveedor_id) + str('/'),datos)
         cliente.realizar_peticion_api()
         if(cliente.es_respuesta_correcta()):
             return redirect("proveedores_editar_put",proveedor_id=proveedor_id)
@@ -386,25 +393,65 @@ def proveedores_editar_put(request,proveedor_id):
                 cliente.incluir_errores_formulario(formulario)
             else:
                 return tratar_errores(request,cliente.codigoRespuesta)
+    
     return render(request, 'proveedor/actualizar.html',{"formulario":formulario,"proveedor":proveedor})
+
+
+#PENDIENTE POR CONTROLAR LA ENTRADA A LA TEMPLATE 
+def proveedores_editar_patch(request,proveedor_id):
+   
+    datosFormulario = None
+    
+    if request.method == "POST":
+        datosFormulario = request.POST
+    
+    proveedor = helper.obtener_proveedor(proveedor_id)
+    formulario = ProveedorActualizarNombreForm(datosFormulario,
+            initial={
+                'proveedor': proveedor['proveedor'],
+            }
+    )
+    if (request.method == "POST"):
+        formulario = ProveedorActualizarNombreForm(request.POST)
+        datos = request.POST.copy()
+        datos["proveedor"] = request.POST.get("proveedor")
+    
+        cliente = cliente_api(env('OAUTH2_ACCESS_TOKEN'),"PUT",'proveedores/editar/nombre/'+str(proveedor_id) + str('/'),datos)
+        cliente.realizar_peticion_api()
+        if(cliente.es_respuesta_correcta()):
+            return redirect("proveedores_editar_patch",proveedor_id=proveedor_id)
+        else:
+            if(cliente.es_error_validacion_datos()):
+                cliente.incluir_errores_formulario(formulario)
+            else:
+                return tratar_errores(request,cliente.codigoRespuesta)
+            
+    # if (datosFormulario is None):
+    #     #formulario = ProveedorActualizarNombreForm(datosFormulario)
+    #     return redirect("proveedores_editar_patch",proveedor_id=proveedor_id)
+        
+    return render(request, 'proveedor/actualizarNombreProveedor.html',{"formulario":formulario,"proveedor":proveedor})
+
 
 
 def proveedores_eliminar(request,proveedor_id):
     try:
         headers = crear_cabecera()
-        response = requests.post(
-                'http://127.0.0.1:8080/api/v1/proveedores/crear',
+        response = requests.delete(
+                f'http://127.0.0.1:8080/api/v1/proveedores/eliminar/{proveedor_id}/',
                 headers=headers
             )
         if(response.status_code == requests.codes.ok):
-            return redirect("proveedores_eliminar")
+            return redirect("proveedor_lista")
         else:
             print(response.status_code)
             response.raise_for_status()
     except Exception as err:
         print(f'Ocurrió un error: {err}')
         return error_500(request)
-    return redirect('proveedores_eliminar')
+    return redirect('proveedor_lista')
+
+
 
 
 

@@ -67,7 +67,11 @@ class ProveedoresForm(forms.Form):
                              max_length=20,
                              help_text="20 caracteres como máximo")
     
-
+class ProveedorActualizarNombreForm(forms.Form):
+    proveedor = forms.CharField(label="Nombre del proveedor",
+                             required=True, 
+                             max_length=200,
+                             help_text="200 caracteres como máximo")
         
 
         
