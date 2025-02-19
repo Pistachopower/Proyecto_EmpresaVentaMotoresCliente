@@ -306,23 +306,23 @@ def busquedaAvanzadaProveedor(request):
 
 
 #post, patch, delete
-def libro_crear(request):
+def proveedor_crear(request):
     
     if (request.method == "POST"):
         try:
             formulario = ProveedoresForm(request.POST)
             headers =  {
-                        'Authorization': 'Bearer '+env("TOKEN_ACCESO"),
+                        'Authorization': 'Bearer '+env("OAUTH2_ACCESS_TOKEN"),
                         "Content-Type": "application/json" 
                     } 
             datos = formulario.data.copy()
-            datos["proveedor"] = request.POST.getlist("proveedor")
-            datos["telefono"] = request.POST.getlist("telefono")
-            datos["correo"] = request.POST.getlist("correo") 
-            datos["direccion"] = request.POST.getlist("direccion")                       
+            datos["proveedor"] = request.POST.get("proveedor")
+            datos["telefono"] = request.POST.get("telefono")
+            datos["correo"] = request.POST.get("correo") 
+            datos["direccion"] = request.POST.get("direccion")                       
     
             response = requests.post(
-                'http://127.0.0.1:8080/api/v1/proveedores/crear',
+                'http://127.0.0.1:8080/api/v1/proveedores/crear/',
                 headers=headers,
                 data=json.dumps(datos)
             )
@@ -387,6 +387,25 @@ def proveedores_editar_put(request,proveedor_id):
             else:
                 return tratar_errores(request,cliente.codigoRespuesta)
     return render(request, 'proveedor/actualizar.html',{"formulario":formulario,"proveedor":proveedor})
+
+
+def proveedores_eliminar(request,proveedor_id):
+    try:
+        headers = crear_cabecera()
+        response = requests.post(
+                'http://127.0.0.1:8080/api/v1/proveedores/crear',
+                headers=headers
+            )
+        if(response.status_code == requests.codes.ok):
+            return redirect("proveedores_eliminar")
+        else:
+            print(response.status_code)
+            response.raise_for_status()
+    except Exception as err:
+        print(f'Ocurrió un error: {err}')
+        return error_500(request)
+    return redirect('proveedores_eliminar')
+
 
 
 def tratar_errores(request,codigo):
