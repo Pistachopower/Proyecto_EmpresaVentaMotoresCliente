@@ -42,7 +42,7 @@ class cliente_api:
     
     def realizar_peticion(self):
         try:
-            self.respuesta = requests.put(
+            self.respuesta = requests.patch(
                    f'http://127.0.0.1:8080/api/v1/{self.url}',
                     headers=self.headers,
                     data=self.datosEnvio
@@ -53,6 +53,7 @@ class cliente_api:
             print(repr(http_err))
             print(f'Hubo un error en la petición: {http_err}')
     
+
     def tratar_respuesta(self):
         if(self.formatoRespuesta == "json"):
             self.datosRespuesta = self.respuesta.json()

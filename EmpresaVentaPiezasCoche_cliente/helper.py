@@ -11,7 +11,7 @@ class helper:
     def obtener_proveedores_select():
     # obtenemos todos los proveedores
         headers = {'Authorization': 'Bearer '+env("OAUTH2_ACCESS_TOKEN")} 
-        response = requests.get('http://127.0.0.1:8080/api/v1/proveedores',headers=headers)
+        response = requests.get('http://127.0.0.1:8080/api  /v1/proveedores',headers=headers)
         proveedores = response.json()
 
         lista_proveedores = [("","Ninguna")]

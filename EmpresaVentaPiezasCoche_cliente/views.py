@@ -405,7 +405,7 @@ def proveedores_editar_patch(request,proveedor_id):
     if request.method == "POST":
         datosFormulario = request.POST
     
-    proveedor = helper.obtener_proveedor(proveedor_id)
+    proveedor = helper.obtener_proveedor(proveedor_id) #se hace la consulta a la bd
     formulario = ProveedorActualizarNombreForm(datosFormulario,
             initial={
                 'proveedor': proveedor['proveedor'],
