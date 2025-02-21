@@ -17,7 +17,7 @@ env = environ.Env()
 
 
 #definimos la url para la configuracion de la api
-BASE_URL = "http://127.0.0.1:8081/api/v1/"
+BASE_URL = "http://127.0.0.1:8080/api/v1/"
 
 # Create your views here.
 def index(request):
@@ -413,23 +413,35 @@ def proveedores_editar_patch(request,proveedor_id):
             }
     )
     if (request.method == "POST"):
-        formulario = ProveedorActualizarNombreForm(request.POST)
-        datos = request.POST.copy()
-        datos["proveedor"] = request.POST.get("proveedor")
-    
-        cliente = cliente_api(env('OAUTH2_ACCESS_TOKEN'),"PUT",'proveedores/editar/nombre/'+str(proveedor_id) + str('/'),datos)
-        cliente.realizar_peticion_api()
-        if(cliente.es_respuesta_correcta()):
-            return redirect("proveedores_editar_patch",proveedor_id=proveedor_id)
-        else:
-            if(cliente.es_error_validacion_datos()):
-                cliente.incluir_errores_formulario(formulario)
-            else:
-                return tratar_errores(request,cliente.codigoRespuesta)
+        try:
+            formulario = ProveedorActualizarNombreForm(request.POST)
+            headers = crear_cabecera()
+            datos = request.POST.copy()
+            response= requests.patch(
+                f"{BASE_URL}proveedores/editar/nombre/{proveedor_id}/",
+                headers=headers,
+                data=json.dumps(datos)
+            )
             
-    # if (datosFormulario is None):
-    #     #formulario = ProveedorActualizarNombreForm(datosFormulario)
-    #     return redirect("proveedores_editar_patch",proveedor_id=proveedor_id)
+            if(response.status_code == requests.codes.ok):
+                return redirect("proveedor_lista")
+            else:
+                print(response.status_code)
+                response.raise_for_status()
+        except HTTPError as http_err:
+            print(f'Hubo un error en la petición: {http_err}')
+            if(response.status_code == 400):
+                errores = response.json()
+                for error in errores:
+                    formulario.add_error(error,errores[error])
+                return render(request, "proveedor/actualizarNombreProveedor.html",{"formulario":formulario,"proveedor":proveedor})
+            else:
+                return error_500(request)
+        except Exception as err:
+            print(f'Ocurrió un error: {err}')
+            return error_500(request)
+            
+
         
     return render(request, 'proveedor/actualizarNombreProveedor.html',{"formulario":formulario,"proveedor":proveedor})
 
