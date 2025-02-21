@@ -22,11 +22,19 @@ urlpatterns = [
     path('busqueda-avanzada-pedidos/',views.busquedaAvanzadaPedidos,name='busquedaAvanzadaPedidos'),
     path('busqueda-avanzada-proveedor/',views.busquedaAvanzadaProveedor,name='busquedaAvanzadaProveedor'),
     
-    #post, patch, put, delete
+    #post, patch, put, delete proveedores
     path('proveedores/listar/', views.proveedor_lista, name='proveedor_lista'),
     path('proveedores/crear/',views.proveedor_crear,name='proveedor_crear'),
     path('proveedores/editar/<int:proveedor_id>/',views.proveedores_editar_put,name='proveedores_editar_put'),
     path('proveedores/editar/nombre/<int:proveedor_id>/',views.proveedores_editar_patch,name='proveedores_editar_patch'),
     path('proveedores/eliminar/<int:proveedor_id>/',views.proveedores_eliminar,name='proveedores_eliminar'),
+
+    #post, patch, put, delete pedido metodopago
+    path('pedido-metodopago/listar/', views.pedido_metodopago_lista, name='pedido_metodopago_lista'),
+    path('pedido-metodopago/crear/', views.pedido_metodopago_crear, name='pedido_metodopago_crear'),
+    path('pedido-metodopago/<int:pedido_id>/',views.pedido_metodopago_editar_put,name='pedido_metodopago_editar_put'),
+    path('pedido-metodopago/editar/nombre/<int:pedido_id>/',views.pedido_metodopago_editar_patch,name='pedido_metodopago_editar_patch'),
+    path('pedido-metodopago/eliminar/<int:proveedor_id>/',views.pedido_metodopago_eliminar,name='pedido_metodopago_eliminar'),
+
 
 ]

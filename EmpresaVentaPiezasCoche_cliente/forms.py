@@ -64,7 +64,7 @@ class ProveedoresForm(forms.Form):
 
     direccion = forms.CharField(label="direccion del proveedor",
                              required=True, 
-                             max_length=20,
+                             max_length=200,
                              help_text="20 caracteres como máximo")
     
 class ProveedorActualizarNombreForm(forms.Form):
@@ -74,5 +74,41 @@ class ProveedorActualizarNombreForm(forms.Form):
                              help_text="200 caracteres como máximo")
         
 
-        
+   
     
+class PedidoMetodoPagoForm(forms.Form):
+    pedido = forms.CharField(label="Nombre del pedido",
+                             required=True, 
+                             max_length=200,
+                             help_text="200 caracteres como máximo")
+    
+    fecha_pedido = forms.DateField(label="Fecha fecha_pedido",
+                                   initial=datetime.today().date,
+                                   widget=forms.SelectDateWidget(years=range(2025))
+                                   )
+    
+    metodo_pago = forms.CharField(label="metodo_pago",
+                                        required=True, 
+                                        max_length=200,)
+    
+    
+    def __init__(self, *args, **kwargs):
+        
+        super(PedidoMetodoPagoForm, self).__init__(*args, **kwargs)
+        
+        metodoPagoDisponibles = helper.obtener_metodoPago_select()
+        self.fields["metodopago"] = forms.ChoiceField(
+            choices=metodoPagoDisponibles,
+            widget=forms.Select,
+            required=True,
+            help_text="Despliega y selecciona un elemento"
+
+        )
+        
+        
+class PedidoActualizarMetodoPagoForm(forms.Form):
+    metodo_pago = forms.CharField(label="Método de pago",
+                                  required=True, 
+                                  max_length=200,
+                                  help_text="200 caracteres como máximo")
+     

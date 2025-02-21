@@ -305,7 +305,7 @@ def busquedaAvanzadaProveedor(request):
         request, "proveedor/busqueda_avanzada_proveedor.html", {"formulario": formulario})
 
 
-#post, patch, delete
+#post, patch, delete proveedores
 def proveedor_lista(request):
     # obtenemos todos los libros
     headers =  {
@@ -339,7 +339,7 @@ def proveedor_crear(request):
                 data=json.dumps(datos)
             )
             if(response.status_code == requests.codes.ok):
-                return redirect("index")
+                return redirect("proveedor_lista")
             else:
                 print(response.status_code)
                 response.raise_for_status()
@@ -368,6 +368,7 @@ def proveedores_editar_put(request,proveedor_id):
     datosFormulario = None
     if request.method == "POST":
         datosFormulario = request.POST
+        
     proveedor = helper.obtener_proveedor(proveedor_id)
     formulario = ProveedoresForm(datosFormulario,
             initial={
@@ -387,7 +388,7 @@ def proveedores_editar_put(request,proveedor_id):
         cliente = cliente_api(env('OAUTH2_ACCESS_TOKEN'),"PUT",'proveedores/editar/'+str(proveedor_id) + str('/'),datos)
         cliente.realizar_peticion_api()
         if(cliente.es_respuesta_correcta()):
-            return redirect("proveedores_editar_put",proveedor_id=proveedor_id)
+            return redirect("proveedor_lista")
         else:
             if(cliente.es_error_validacion_datos()):
                 cliente.incluir_errores_formulario(formulario)
@@ -397,7 +398,7 @@ def proveedores_editar_put(request,proveedor_id):
     return render(request, 'proveedor/actualizar.html',{"formulario":formulario,"proveedor":proveedor})
 
 
-#PENDIENTE POR CONTROLAR LA ENTRADA A LA TEMPLATE 
+
 def proveedores_editar_patch(request,proveedor_id):
    
     datosFormulario = None
@@ -451,8 +452,139 @@ def proveedores_eliminar(request,proveedor_id):
         return error_500(request)
     return redirect('proveedor_lista')
 
+#post, patch, delete pedido metodopago
+def pedido_metodopago_lista(request):
+    headers =  {
+                        'Authorization': 'Bearer '+env("OAUTH2_ACCESS_TOKEN"),
+                        "Content-Type": "application/json" 
+                    } 
+    response = requests.get('http://127.0.0.1:8080/api/v1/pedido-metodopago_listar/',headers=headers)
+   # Transformamos la respuesta en json
+    pedidosMetPag = response.json()
+    return render(request, 'pedidoMetodoPago/lista_pedidoMetodoPago.html',{"pedidosMetPag":pedidosMetPag})
+
+#POR CORREGIR. HAY ERRORES
+def pedido_metodopago_crear(request):
+    if request.method == "POST":
+        try:
+            formulario = PedidoMetodoPagoForm(request.POST)
+            headers = {
+                'Authorization': 'Bearer ' + env("OAUTH2_ACCESS_TOKEN"),
+                "Content-Type": "application/json"
+            }
+            datos = formulario.data.copy()
+            datos["pedido"] = request.POST.get("pedido")
+            datos["fecha_pedido"] = str(
+                                            datetime.date(year=int(datos['fecha_publicacion_year']),
+                                                        month=int(datos['fecha_pedido_month']),
+                                                        day=int(datos['fecha_pedido_day']))
+                                             )
+            datos["metodo_pago"] = request.POST.get("metodo_pago")
+
+            response = requests.post(
+                'http://127.0.0.1:8080/api/v1/pedido-metodopago/crear/',
+                headers=headers,
+                data=json.dumps(datos)
+            )
+            if response.status_code == requests.codes.ok:
+                return redirect("proveedor_lista")
+            else:
+                print(response.status_code)
+                response.raise_for_status()
+        except HTTPError as http_err:
+            print(f'Hubo un error en la petición: {http_err}')
+            if response.status_code == 400:
+                errores = response.json()
+                for error in errores:
+                    formulario.add_error(error, errores[error])
+                return render(request, 'pedidoMetodoPago/crear.html', {"formulario": formulario})
+            else:
+                return error_500(request)
+        except Exception as err:
+            print(f'Ocurrió un error: {err}')
+            return error_500(request)
+    else:
+        formulario = PedidoMetodoPagoForm(None)
+    return render(request, 'pedidoMetodoPago/crear.html', {"formulario": formulario})
 
 
+def pedido_metodopago_editar_put(request, pedido_id):
+    datosFormulario = None
+    if request.method == "POST":
+        datosFormulario = request.POST
+
+    pedido = helper.obtener_pedido(pedido_id)
+    formulario = PedidoMetodoPagoForm(datosFormulario,
+            initial={
+                'pedido': pedido['pedido'],
+                'fecha_pedido': pedido["fecha_pedido"],
+                'metodo_pago': pedido['metodo_pago'],
+            }
+    )
+    if request.method == "POST":
+        formulario = PedidoMetodoPagoForm(request.POST)
+        datos = request.POST.copy()
+        datos["pedido"] = request.POST.get("pedido")
+        datos["fecha_pedido"] = request.POST.get("fecha_pedido")
+        datos["metodo_pago"] = request.POST.get("metodo_pago")
+        cliente = cliente_api(env('OAUTH2_ACCESS_TOKEN'), "PUT", 'pedido-metodopago/editar/' + str(pedido_id) + str('/'), datos)
+        cliente.realizar_peticion_api()
+        if cliente.es_respuesta_correcta():
+            return redirect("pedido_metodopago_editar_put", pedido_id=pedido_id)
+        else:
+            if cliente.es_error_validacion_datos():
+                cliente.incluir_errores_formulario(formulario)
+            else:
+                return tratar_errores(request, cliente.codigoRespuesta)
+
+    return render(request, 'pedidoMetodoPago/actualizar.html', {"formulario": formulario, "pedido": pedido})
+
+def pedido_metodopago_editar_patch(request, pedido_id):
+    datosFormulario = None
+    
+    if request.method == "POST":
+        datosFormulario = request.POST
+    
+    pedido = helper.obtener_pedido(pedido_id)  # se hace la consulta a la bd
+    formulario = PedidoActualizarMetodoPagoForm(datosFormulario,
+            initial={
+                'metodo_pago': pedido['metodo_pago'],
+            }
+    )
+    if request.method == "POST":
+        formulario = PedidoActualizarMetodoPagoForm(request.POST)
+        datos = request.POST.copy()
+        datos["metodo_pago"] = request.POST.get("metodo_pago")
+    
+        cliente = cliente_api(env('OAUTH2_ACCESS_TOKEN'), "PUT", 'pedido-metodopago/editar/nombre/' + str(pedido_id) + str('/'), datos)
+        cliente.realizar_peticion_api()
+        if cliente.es_respuesta_correcta():
+            return redirect("pedido_metodopago_editar_patch", pedido_id=pedido_id)
+        else:
+            if cliente.es_error_validacion_datos():
+                cliente.incluir_errores_formulario(formulario)
+            else:
+                return tratar_errores(request, cliente.codigoRespuesta)
+        
+    return render(request, 'pedidoMetodoPago/actualizarMetodoPago.html', {"formulario": formulario, "pedido": pedido})
+
+
+def pedido_metodopago_eliminar(request, pedido_id):
+    try:
+        headers = crear_cabecera()
+        response = requests.delete(
+                f'http://127.0.0.1:8080/api/v1/pedido-metodopago/eliminar/{pedido_id}/',
+                headers=headers
+            )
+        if response.status_code == requests.codes.ok:
+            return redirect("pedido_metodopago_lista")
+        else:
+            print(response.status_code)
+            response.raise_for_status()
+    except Exception as err:
+        print(f'Ocurrió un error: {err}')
+        return error_500(request)
+    return redirect('pedido_metodopago_lista')
 
 
 def tratar_errores(request,codigo):

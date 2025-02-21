@@ -1,0 +1,23 @@
+{% extends "principal.html" %}
+
+{% block contenido %}
+<form action = "{% url 'pedido_metodopago_crear' %}" method = "post" enctype="multipart/form-data"> 
+    
+    {% load django_bootstrap5 %}
+    {% csrf_token %} 
+    
+    <div class="mb-4">
+        {% bootstrap_field formulario.pedido show_label=True %}
+    </div>
+
+    <div class="mb-4">
+        {% bootstrap_field formulario.fecha_pedido show_label=True %}
+    </div>
+    
+    <div class="mb-4">
+        {% bootstrap_field formulario.metodo_pago  show_label=True %}
+    </div>
+
+    {% bootstrap_button "Enviar" button_type="submit" button_class="btn-primary" %}
+</form>
+{% endblock %}

@@ -1,0 +1,36 @@
+{% extends "principal.html" %}
+{% block contenido %}
+    <h1 class="display-3">Lista de pedidos</h1>
+
+    <div class="row">
+        {% for pedido in pedidosMetPag %}
+            <div class="col-sm-4 mb-2">
+               
+                <p>Nombre pedido: {{pedido.pedido}}</p>
+                <p>fecha_pedido: {{pedido.fecha_pedido}}</p>
+                <p>metodo_pago: {{pedido.metodo_pago.tipo_pago}}</p>
+              
+
+                <!-- Formulario para actualizar proveedor -->
+                <form action="" method="get" style="display:inline;">
+                    <button type="submit" class="btn btn-primary mb-2">Editar todos los campos</button>
+                </form>
+             
+                <!-- Formulario para actualizar proveedor por nombre -->
+                <form action="" method="get" style="display:inline;">
+                    <button type="submit" class="btn btn-primary mb-2">Editar por nombre</button>
+                </form> 
+
+                <!-- Formulario para eliminar proveedor 
+                pedido_metodopago_eliminar 
+                -->
+                <form action="{% url 'pedido_metodopago_eliminar' pedido.id %}" method="post" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger mb-2">Eliminar</button>
+                </form>
+            </div>
+        {% empty %}
+            <h1>Lo sentimos pero no hay pedidos</h1>
+        {% endfor %}
+    </div>
+{% endblock %}

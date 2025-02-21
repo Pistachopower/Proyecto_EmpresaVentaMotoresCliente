@@ -26,5 +26,22 @@ class helper:
         proveedores = response.json()
         return proveedores
 
-    
-    
+
+
+    def obtener_metodoPago_select(pedido_id=None):
+        headers = {'Authorization': 'Bearer '+env("OAUTH2_ACCESS_TOKEN")} 
+        response = requests.get('http://127.0.0.1:8080/api/v1/metodopago/' +str(pedido_id) +str('/'),headers=headers)
+        metodospago = response.json()
+        
+        if pedido_id:
+            lista_metodopago = [("","Ninguna")]
+            for metodoP in metodospago:
+                lista_metodopago.append((metodoP["id"],metodoP["nombre"]))
+        return lista_metodopago
+
+
+    def obtener_pedido(pedido_id):
+        headers = {'Authorization': 'Bearer '+env("OAUTH2_ACCESS_TOKEN")} 
+        response = requests.get('http://127.0.0.1:8080/api/v1/pedidos/' + str(pedido_id), headers=headers)
+        pedido = response.json()
+        return pedido
