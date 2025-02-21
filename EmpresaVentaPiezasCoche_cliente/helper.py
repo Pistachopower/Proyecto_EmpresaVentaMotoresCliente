@@ -28,12 +28,12 @@ class helper:
 
 
 
-    def obtener_metodoPago_select(pedido_id=None):
+    def obtener_metodoPago_select(metodoPago_id):
         headers = {'Authorization': 'Bearer '+env("OAUTH2_ACCESS_TOKEN")} 
-        response = requests.get('http://127.0.0.1:8080/api/v1/metodopago/' +str(pedido_id) +str('/'),headers=headers)
+        response = requests.get('http://127.0.0.1:8080/api/v1/metodopago/metodopago-obtener/' +str(metodoPago_id) +str('/'),headers=headers)
         metodospago = response.json()
         
-        if pedido_id:
+        if metodoPago_id:
             lista_metodopago = [("","Ninguna")]
             for metodoP in metodospago:
                 lista_metodopago.append((metodoP["id"],metodoP["nombre"]))
@@ -42,6 +42,6 @@ class helper:
 
     def obtener_pedido(pedido_id):
         headers = {'Authorization': 'Bearer '+env("OAUTH2_ACCESS_TOKEN")} 
-        response = requests.get('http://127.0.0.1:8080/api/v1/pedidos/' + str(pedido_id), headers=headers)
+        response = requests.get('http://127.0.0.1:8080/api/v1/pedido-metodopago/' + str(pedido_id), headers=headers)
         pedido = response.json()
         return pedido

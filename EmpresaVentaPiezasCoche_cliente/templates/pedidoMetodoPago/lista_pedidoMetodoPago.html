@@ -12,6 +12,7 @@
               
 
                 <!-- Formulario para actualizar proveedor -->
+                {% comment %} {% url 'pedido_metodopago_editar_put' pedido.id %} {% endcomment %}
                 <form action="" method="get" style="display:inline;">
                     <button type="submit" class="btn btn-primary mb-2">Editar todos los campos</button>
                 </form>
@@ -24,7 +25,7 @@
                 <!-- Formulario para eliminar proveedor 
                 pedido_metodopago_eliminar 
                 -->
-                <form action="{% url 'pedido_metodopago_eliminar' pedido.id %}" method="post" style="display:inline;">
+                <form action="" method="post" style="display:inline;">
                     {% csrf_token %}
                     <button type="submit" class="btn btn-danger mb-2">Eliminar</button>
                 </form>

@@ -96,7 +96,7 @@ class PedidoMetodoPagoForm(forms.Form):
         
         super(PedidoMetodoPagoForm, self).__init__(*args, **kwargs)
         
-        metodoPagoDisponibles = helper.obtener_metodoPago_select()
+        metodoPagoDisponibles = helper.obtener_metodoPago_select(self.metodo_pago)
         self.fields["metodopago"] = forms.ChoiceField(
             choices=metodoPagoDisponibles,
             widget=forms.Select,
