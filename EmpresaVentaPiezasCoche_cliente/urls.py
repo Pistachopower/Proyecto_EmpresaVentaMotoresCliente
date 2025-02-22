@@ -32,6 +32,7 @@ urlpatterns = [
     #post, patch, put, delete pedido metodopago
     path('pedido-metodopago/listar/', views.pedido_metodopago_lista, name='pedido_metodopago_lista'),
     path('pedido-metodopago/crear/', views.pedido_metodopago_crear, name='pedido_metodopago_crear'),
+    path('pedido-metodopago/<int:pedido_id>/',views.pedido_eliminar,name='pedido_eliminar'),
 
 
 

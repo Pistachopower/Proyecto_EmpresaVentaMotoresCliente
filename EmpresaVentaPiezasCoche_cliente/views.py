@@ -574,6 +574,38 @@ def pedido_metodopago_crear(request):
     return render(request, "pedidoMetodoPago/crear.html", {"formulario": formulario})
 
 
+#
+def pedido_eliminar(request, pedido_id):
+    try:
+        headers = crear_cabecera()
+        response = requests.delete(
+            f"http://127.0.0.1:8080/api/v1/pedido/eliminar/{pedido_id}/",
+            headers=headers,
+        )
+        if response.status_code == requests.codes.ok:
+            return redirect("pedido_metodopago_lista")
+        else:
+            print(response.status_code)
+            response.raise_for_status()
+    except Exception as err:
+        print(f"Ocurrió un error: {err}")
+        return error_500(request)
+    return redirect("pedido_metodopago_lista")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 def tratar_errores(request, codigo):
     if codigo == 404:
         return error_404(request)
