@@ -76,33 +76,52 @@ class ProveedorActualizarNombreForm(forms.Form):
 
    
     
-class PedidoMetodoPagoForm(forms.Form):
+class PedidosForm(forms.Form):
     pedido = forms.CharField(label="Nombre del pedido",
                              required=True, 
                              max_length=200,
                              help_text="200 caracteres como máximo")
     
     fecha_pedido = forms.DateField(label="Fecha fecha_pedido",
-                                   initial=datetime.today().date,
-                                   widget=forms.SelectDateWidget(years=range(2025))
+                                   initial=datetime.today,
+                                   widget=forms.SelectDateWidget(years=range(2900))
                                    )
     
-    metodo_pago = forms.CharField(label="metodo_pago",
-                                        required=True, 
-                                        max_length=200,)
+    ESTADO = [("P", "Pendiente"), ("ENV", "Enviado"), ("ENTR", "Entregado")]
     
+    estado = forms.CharField(required=False, label="Estado"
+                                    , widget=forms.Select(choices=ESTADO))
+    
+    total_importe = forms.IntegerField(label="importe total",
+                             required=True, 
+                             help_text="200 caracteres como máximo")
     
     def __init__(self, *args, **kwargs):
         
-        super(PedidoMetodoPagoForm, self).__init__(*args, **kwargs)
+        super(PedidosForm, self).__init__(*args, **kwargs)
         
-        metodoPagoDisponibles = helper.obtener_metodoPago_select(self.metodo_pago)
-        self.fields["metodopago"] = forms.ChoiceField(
+        metodoPagoDisponibles = helper.obtener_metodos_pago_select()
+        self.fields["metodo_pago"] = forms.ChoiceField(
             choices=metodoPagoDisponibles,
             widget=forms.Select,
             required=True,
             help_text="Despliega y selecciona un elemento"
-
+        )
+        
+        UsuarioDisponiblesUsuario = helper.obtener_usuario_select()
+        self.fields["usuario_Pedido"] = forms.ChoiceField(
+            choices=UsuarioDisponiblesUsuario,
+            widget=forms.Select,
+            required=True,
+            help_text="Despliega y selecciona un elemento"
+        )
+        
+        ClientesDisponibles = helper.obtener_cliente_select()
+        self.fields["cliente"] = forms.ChoiceField(
+            choices=ClientesDisponibles,
+            widget=forms.Select,
+            required=True,
+            help_text="Despliega y selecciona un elemento"
         )
         
         
