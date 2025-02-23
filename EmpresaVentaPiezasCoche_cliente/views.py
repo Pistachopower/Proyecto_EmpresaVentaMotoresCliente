@@ -391,7 +391,7 @@ def proveedores_editar_put(request, proveedor_id):
     if request.method == "POST":
         datosFormulario = request.POST
 
-    proveedor = helper.obtener_proveedor(proveedor_id)
+    proveedor = helper.obtener_proveedor_select(proveedor_id)
     formulario = ProveedoresForm(
         datosFormulario,
         initial={
@@ -437,7 +437,10 @@ def proveedores_editar_patch(request, proveedor_id):
     if request.method == "POST":
         datosFormulario = request.POST
 
-    proveedor = helper.obtener_proveedor(proveedor_id)  # se hace la consulta a la bd
+    proveedor = helper.obtener_proveedor_select(
+        proveedor_id
+    )  # se hace la consulta a la bd
+
     formulario = ProveedorActualizarNombreForm(
         datosFormulario,
         initial={
@@ -538,10 +541,9 @@ def pedido_metodopago_crear(request):
                     day=int(datos["fecha_pedido_day"]),
                 )
             )
- 
 
             datos["metodo_pago"] = request.POST.get("metodo_pago")
-            
+
             datos["usuario"] = request.POST.get("usuario")
 
             response = requests.post(
@@ -574,7 +576,6 @@ def pedido_metodopago_crear(request):
     return render(request, "pedidoMetodoPago/crear.html", {"formulario": formulario})
 
 
-#
 def pedido_eliminar(request, pedido_id):
     try:
         headers = crear_cabecera()
@@ -593,17 +594,115 @@ def pedido_eliminar(request, pedido_id):
     return redirect("pedido_metodopago_lista")
 
 
+def pedido_editar_patch(request, pedido_id):
+
+    datosFormulario = None
+
+    if request.method == "POST":
+        datosFormulario = request.POST
+
+    pedido = helper.obtener_pedido_select(pedido_id)  # se hace la consulta a la bd
+    formulario = PedidoActualizarNombreForm(
+        datosFormulario,
+        initial={
+            "pedido": pedido["pedido"],
+        },
+    )
+    if request.method == "POST":
+        try:
+            formulario = PedidoActualizarNombreForm(request.POST)
+            headers = crear_cabecera()
+            datos = request.POST.copy()
+            response = requests.patch(
+                f"{BASE_URL}pedido-metodopago/editar/nombre/{pedido_id}/",
+                headers=headers,
+                data=json.dumps(datos),
+            )
+
+            if response.status_code == requests.codes.ok:
+                return redirect("pedido_metodopago_lista")
+            else:
+                print(response.status_code)
+                response.raise_for_status()
+        except HTTPError as http_err:
+            print(f"Hubo un error en la petición: {http_err}")
+            if response.status_code == 400:
+                errores = response.json()
+                for error in errores:
+                    formulario.add_error(error, errores[error])
+                return render(
+                    request,
+                    "pedidoMetodoPago/actualizarNombrePedido.html",
+                    {"formulario": formulario, "pedido_id": pedido_id},
+                )
+            else:
+                return error_500(request)
+        except Exception as err:
+            print(f"Ocurrió un error: {err}")
+            return error_500(request)
+
+    return render(
+        request,
+        "pedidoMetodoPago/actualizarNombrePedido.html",
+        {"formulario": formulario, "pedido": pedido},
+    )
 
 
+def pedido_editar_put(request, pedido_id):
 
+    datosFormulario = None
+    if request.method == "POST":
+        datosFormulario = request.POST
 
+    pedido = helper.obtener_pedido_select(pedido_id)
+    fecha_obj = datetime.strptime(pedido["fecha_pedido"], "%d-%m-%Y").date()
+    formulario = PedidosForm(
+        datosFormulario,
+        initial={
+            "pedido": pedido["pedido"],
+            "fecha_pedido": str(date(year=fecha_obj.year, month=fecha_obj.month, day=fecha_obj.day)),
+            "estado": pedido["estado"],
+            "metodo_pago": pedido["metodo_pago"],
+            "total_importe": pedido["total_importe"],
+            "usuario_Pedido": pedido["usuario_Pedido"],
+            "cliente": pedido["cliente"],
+        },
+    )
+    if request.method == "POST":
+        formulario = PedidosForm(request.POST)
+        datos = request.POST.copy()
+        datos["pedido"] = request.POST.get("pedido")
+        datos["fecha_pedido"] = str(
+            date(
+                year=int(datos["fecha_pedido_year"]),
+                month=int(datos["fecha_pedido_month"]),
+                day=int(datos["fecha_pedido_day"]),
+            )
+        )
+        datos["estado"] = request.POST.get("estado")
+        datos["total_importe"] = request.POST.get("total_importe")
+        datos["usuario"] = request.POST.get("usuario")
+        datos["cliente"] = request.POST.get("cliente")
+        cliente = cliente_api(
+            env("OAUTH2_ACCESS_TOKEN"),
+            "PUT",
+            "pedido-metodopago/editar/" + str(pedido_id) + str("/"),
+            datos,
+        )
+        cliente.realizar_peticion_api()
+        if cliente.es_respuesta_correcta():
+            return redirect("pedido_metodopago_lista")
+        else:
+            if cliente.es_error_validacion_datos():
+                cliente.incluir_errores_formulario(formulario)
+            else:
+                return tratar_errores(request, cliente.codigoRespuesta)
 
-
-
-
-
-
-
+    return render(
+        request,
+        "pedidoMetodoPago/actualizar.html",
+        {"formulario": formulario, "pedido": pedido},
+    )
 
 
 def tratar_errores(request, codigo):

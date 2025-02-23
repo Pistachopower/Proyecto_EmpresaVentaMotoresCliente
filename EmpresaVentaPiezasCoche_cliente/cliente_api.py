@@ -42,7 +42,7 @@ class cliente_api:
     
     def realizar_peticion(self):
         try:
-            self.respuesta = requests.patch(
+            self.respuesta = requests.put(
                    f'http://127.0.0.1:8080/api/v1/{self.url}',
                     headers=self.headers,
                     data=self.datosEnvio

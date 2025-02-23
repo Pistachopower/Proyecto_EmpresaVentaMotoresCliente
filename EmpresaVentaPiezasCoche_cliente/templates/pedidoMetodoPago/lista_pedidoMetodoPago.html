@@ -13,17 +13,16 @@
 
                 <!-- Formulario para actualizar proveedor -->
                 {% comment %} {% url 'pedido_metodopago_editar_put' pedido.id %} {% endcomment %}
-                <form action="" method="get" style="display:inline;">
+                <form action="{% url 'pedido_editar_put' pedido.id %}" method="get" style="display:inline;">
                     <button type="submit" class="btn btn-primary mb-2">Editar todos los campos</button>
                 </form>
              
                 <!-- Formulario para actualizar proveedor por nombre -->
-                <form action="" method="get" style="display:inline;">
+                <form action="{% url 'pedido_editar_patch' pedido.id %}" method="get" style="display:inline;">
                     <button type="submit" class="btn btn-primary mb-2">Editar por nombre</button>
                 </form> 
 
                 <!-- Formulario para eliminar proveedor 
-                pedido_metodopago_eliminar 
                 -->
                 <form action="{% url 'pedido_eliminar' pedido.id%}" method="post" style="display:inline;">
                     {% csrf_token %}

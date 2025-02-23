@@ -3,22 +3,39 @@
 {% block contenido %}
 
 {% load django_bootstrap5 %}
-<form action = "{% url 'pedido_metodopago_editar_put' pedido.id %}" method = "post"> 
+<form action = "{% url 'pedido_editar_put' pedido.id %}" method = "post"> 
     
     {% csrf_token %} 
 
     <div class="mb-4">
         {% bootstrap_field formulario.pedido show_label=True %}
     </div>
+    
 
     <div class="mb-4">
         {% bootstrap_field formulario.fecha_pedido show_label=True %}
     </div>
+
+    <div class="mb-4">
+        {% bootstrap_field formulario.estado show_label=True %}
+    </div>
+
     
     <div class="mb-4">
         {% bootstrap_field formulario.metodo_pago  show_label=True %}
     </div>
-    
+
+    <div class="mb-4">
+        {% bootstrap_field formulario.usuario_Pedido show_label=True %}
+    </div>
+
+    <div class="mb-4">
+        {% bootstrap_field formulario.cliente show_label=True %}
+    </div>
+
+    <div class="mb-4">
+        {% bootstrap_field formulario.total_importe show_label=True %}
+    </div>
 
     {% bootstrap_button "Enviar" button_type="submit" button_class="btn-primary" %}
 
