@@ -24,7 +24,14 @@ BASE_URL = "http://127.0.0.1:8080/api/v1/"
 
 # Create your views here.
 def index(request):
-    return render(request, "index.html")
+
+    token = request.session.get("token")
+    isLogin = False
+
+    if token:
+        isLogin = True
+
+    return render(request, "index.html", {"isLogin": isLogin})
 
 
 def empleados_lista_api(request):
@@ -660,7 +667,9 @@ def pedido_editar_put(request, pedido_id):
         datosFormulario,
         initial={
             "pedido": pedido["pedido"],
-            "fecha_pedido": str(date(year=fecha_obj.year, month=fecha_obj.month, day=fecha_obj.day)),
+            "fecha_pedido": str(
+                date(year=fecha_obj.year, month=fecha_obj.month, day=fecha_obj.day)
+            ),
             "estado": pedido["estado"],
             "metodo_pago": pedido["metodo_pago"],
             "total_importe": pedido["total_importe"],
@@ -672,6 +681,8 @@ def pedido_editar_put(request, pedido_id):
         formulario = PedidosForm(request.POST)
         datos = request.POST.copy()
         datos["pedido"] = request.POST.get("pedido")
+
+        # conversion de fechas
         datos["fecha_pedido"] = str(
             date(
                 year=int(datos["fecha_pedido_year"]),
@@ -703,6 +714,84 @@ def pedido_editar_put(request, pedido_id):
         "pedidoMetodoPago/actualizar.html",
         {"formulario": formulario, "pedido": pedido},
     )
+
+
+def registrar_usuario(request):
+    if request.method == "POST":
+        try:
+            formulario = RegistroForm(request.POST)
+            if formulario.is_valid():
+                headers = {"Content-Type": "application/json"}
+                response = requests.post(
+                    BASE_URL + "registrar/usuario",
+                    headers=headers,
+                    data=json.dumps(formulario.cleaned_data),
+                )
+
+                if response.status_code == requests.codes.ok:
+                    usuario = response.json()
+                    token_acceso = helper.obtener_token_session(
+                        formulario.cleaned_data.get("username"),
+                        formulario.cleaned_data.get("password1"),
+                    )
+                    request.session["usuario"] = usuario
+                    request.session["token"] = token_acceso
+                    return redirect("index")
+                else:
+                    print(response.status_code)
+                    response.raise_for_status()
+                print(formulario.errors)
+        except HTTPError as http_err:
+            print(f"Hubo un error en la petición: {http_err}")
+            if response.status_code == 400:
+                errores = response.json()
+                for error in errores:
+                    formulario.add_error(error, errores[error])
+                return render(
+                    request, "registration/signup.html", {"formulario": formulario}
+                )
+            else:
+                return error_404(request)
+        except Exception as err:
+            print(f"Ocurrió un error: {err}")
+            return error_500(request)
+
+    else:
+        formulario = RegistroForm()
+    return render(request, "registration/signup.html", {"formulario": formulario})
+
+
+def login(request):
+    if request.method == "POST":
+        formulario = LoginForm(request.POST)
+        try:
+            token_acceso = helper.obtener_token_session(
+                formulario.data.get("username"), formulario.data.get("password")
+            )
+            request.session["token"] = token_acceso
+
+            headers = {"Authorization": "Bearer " + token_acceso}
+            response = requests.get(
+                BASE_URL + "usuario/token/" + token_acceso,
+                headers=headers,
+            )
+            usuario = response.json()
+            request.session["usuario"] = usuario
+
+            return redirect("index")
+        except Exception as excepcion:
+            print(f"Hubo un error en la petición: {excepcion}")
+            formulario.add_error("username", excepcion)
+            formulario.add_error("password", excepcion)
+            return render(request, "registration/login.html", {"form": formulario})
+    else:
+        formulario = LoginForm()
+    return render(request, "registration/login.html", {"form": formulario})
+
+
+def logout(request):
+    del request.session["token"]
+    return redirect("index")
 
 
 def tratar_errores(request, codigo):
