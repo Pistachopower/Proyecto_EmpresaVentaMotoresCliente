@@ -94,8 +94,10 @@ class helper:
             'client_id': 'EmpresaVentaPiezasCoche',
             'client_secret': 'EmpresaVentaPiezasCoche',
         }
-        
+        #Envía todos los datos al servidor de autenticación.
         response = requests.post(token_url, data=data)
+        
+        #Si la respuesta es exitosa, devuelve un token de acceso.
         respuesta = response.json()
         if response.status_code == 200:
             return respuesta.get('access_token')

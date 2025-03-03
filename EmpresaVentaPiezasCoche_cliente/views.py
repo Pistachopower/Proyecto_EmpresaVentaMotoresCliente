@@ -724,6 +724,8 @@ def registrar_usuario(request):
         try:
             formulario = RegistroForm(request.POST)
             if formulario.is_valid():
+                
+                #se prepara el formulario para enviarlo a la API
                 headers = {"Content-Type": "application/json"}
                 response = requests.post(
                     BASE_URL + "registrar/usuario",
