@@ -19,6 +19,7 @@ env = environ.Env()
 # definimos la url para la configuracion de la api
 BASE_URL = "http://127.0.0.1:8080/api/v1/"
 
+
 # Create your views here.
 def index(request):
     token = request.session.get("token")
@@ -27,6 +28,7 @@ def index(request):
         isLogin = True
     return render(request, "index.html", {"isLogin": isLogin})
 
+
 def empleados_lista_api(request):
     token = request.session.get("token")
     headers = {"Authorization": f"Bearer {token}"}
@@ -34,32 +36,43 @@ def empleados_lista_api(request):
     empleados_normal = response.json()
     return render(request, "empleado/lista.html", {"empleados": empleados_normal})
 
+
 def empleados_lista_api_mejorado(request):
     token = request.session.get("token")
     headers = {"Authorization": f"Bearer {token}"}
-    response = requests.get("http://127.0.0.1:8080/api/v1/empleados_mejorado", headers=headers)
+    response = requests.get(
+        "http://127.0.0.1:8080/api/v1/empleados_mejorado", headers=headers
+    )
     empleados = response.json()
     return render(request, "empleado/lista_Mejorado.html", {"empleados": empleados})
+
 
 def listar_clientes_mejorado(request):
     token = request.session.get("token")
     headers = {"Authorization": f"Bearer {token}"}
-    response = requests.get("http://127.0.0.1:8080/api/v1/clientes_mejorado", headers=headers)
+    response = requests.get(
+        "http://127.0.0.1:8080/api/v1/clientes_mejorado", headers=headers
+    )
     cliente = response.json()
     return render(request, "cliente/lista_Mejorado.html", {"cliente_mejorado": cliente})
+
 
 def listar_pedido_mejorado(request):
     token = request.session.get("token")
     headers = {"Authorization": f"Bearer {token}"}
-    response = requests.get("http://127.0.0.1:8081/api/v1/pedido_mejorado", headers=headers)
+    response = requests.get(
+        "http://127.0.0.1:8081/api/v1/pedido_mejorado", headers=headers
+    )
     pedido = response.json()
     return render(request, "pedido/lista_Mejorado.html", {"pedido_mejorado": pedido})
+
 
 def crear_cabecera():
     return {
         "Authorization": "Bearer " + env("OAUTH2_ACCESS_TOKEN"),
         "Content-Type": "application/json",
     }
+
 
 def busquedaSimpleEmpleado(request):
     if len(request.GET) > 0:
@@ -81,6 +94,7 @@ def busquedaSimpleEmpleado(request):
         empleados = {}
         return render(request, "empleado/lista.html", {"empleados": empleados})
 
+
 def busquedaAvanzadaEmpleado(request):
     if len(request.GET) > 0:
         formulario = BusquedaAvanzadaEmpleadoForm(request.GET)
@@ -94,7 +108,11 @@ def busquedaAvanzadaEmpleado(request):
             )
             if response.status_code == requests.codes.ok:
                 empleados = response.json()
-                return render(request, "empleado/busqueda_avanzada.html", {"formulario": formulario, "empleados": empleados})
+                return render(
+                    request,
+                    "empleado/busqueda_avanzada.html",
+                    {"formulario": formulario, "empleados": empleados},
+                )
             else:
                 response.raise_for_status()
         except HTTPError as http_err:
@@ -103,7 +121,11 @@ def busquedaAvanzadaEmpleado(request):
                 errores = response.json()
                 for error in errores:
                     formulario.add_error(error, errores[error])
-                return render(request, "empleado/busqueda_avanzada.html", {"formulario": formulario})
+                return render(
+                    request,
+                    "empleado/busqueda_avanzada.html",
+                    {"formulario": formulario},
+                )
             else:
                 return error_500(request)
         except Exception as err:
@@ -111,7 +133,10 @@ def busquedaAvanzadaEmpleado(request):
             return error_500(request)
     else:
         formulario = BusquedaAvanzadaEmpleadoForm(None)
-    return render(request, "empleado/busqueda_avanzada.html", {"formulario": formulario})
+    return render(
+        request, "empleado/busqueda_avanzada.html", {"formulario": formulario}
+    )
+
 
 def busquedaAvanzadaClientes(request):
     if len(request.GET) > 0:
@@ -126,7 +151,11 @@ def busquedaAvanzadaClientes(request):
             )
             if response.status_code == requests.codes.ok:
                 clientes = response.json()
-                return render(request, "cliente/busqueda_avanzada_cliente.html", {"formulario": formulario, "clientes": clientes})
+                return render(
+                    request,
+                    "cliente/busqueda_avanzada_cliente.html",
+                    {"formulario": formulario, "clientes": clientes},
+                )
             else:
                 response.raise_for_status()
         except HTTPError as http_err:
@@ -134,7 +163,11 @@ def busquedaAvanzadaClientes(request):
                 errores = response.json()
                 for error in errores:
                     formulario.add_error(error, errores[error])
-                return render(request, "cliente/busqueda_avanzada_cliente.html", {"formulario": formulario})
+                return render(
+                    request,
+                    "cliente/busqueda_avanzada_cliente.html",
+                    {"formulario": formulario},
+                )
             else:
                 return error_500(request)
         except Exception as err:
@@ -142,7 +175,10 @@ def busquedaAvanzadaClientes(request):
             return error_500(request)
     else:
         formulario = BusquedaAvanzadaClientesForm(None)
-    return render(request, "cliente/busqueda_avanzada_cliente.html", {"formulario": formulario})
+    return render(
+        request, "cliente/busqueda_avanzada_cliente.html", {"formulario": formulario}
+    )
+
 
 def busquedaAvanzadaPedidos(request):
     if len(request.GET) > 0:
@@ -157,7 +193,11 @@ def busquedaAvanzadaPedidos(request):
             )
             if response.status_code == requests.codes.ok:
                 pedidos = response.json()
-                return render(request, "pedido/busqueda_avanzada_pedidos.html", {"formulario": formulario, "pedidos": pedidos})
+                return render(
+                    request,
+                    "pedido/busqueda_avanzada_pedidos.html",
+                    {"formulario": formulario, "pedidos": pedidos},
+                )
             else:
                 response.raise_for_status()
         except HTTPError as http_err:
@@ -165,7 +205,11 @@ def busquedaAvanzadaPedidos(request):
                 errores = response.json()
                 for error in errores:
                     formulario.add_error(error, errores[error])
-                return render(request, "pedido/busqueda_avanzada_pedidos.html", {"formulario": formulario})
+                return render(
+                    request,
+                    "pedido/busqueda_avanzada_pedidos.html",
+                    {"formulario": formulario},
+                )
             else:
                 return error_500(request)
         except Exception as err:
@@ -173,7 +217,10 @@ def busquedaAvanzadaPedidos(request):
             return error_500(request)
     else:
         formulario = BusquedaAvanzadaPedidoForm(None)
-    return render(request, "pedido/busqueda_avanzada_pedidos.html", {"formulario": formulario})
+    return render(
+        request, "pedido/busqueda_avanzada_pedidos.html", {"formulario": formulario}
+    )
+
 
 def busquedaAvanzadaProveedor(request):
     if len(request.GET) > 0:
@@ -188,7 +235,11 @@ def busquedaAvanzadaProveedor(request):
             )
             if response.status_code == requests.codes.ok:
                 proveedor = response.json()
-                return render(request, "proveedor/busqueda_avanzada_proveedor.html", {"formulario": formulario, "proveedor": proveedor})
+                return render(
+                    request,
+                    "proveedor/busqueda_avanzada_proveedor.html",
+                    {"formulario": formulario, "proveedor": proveedor},
+                )
             else:
                 response.raise_for_status()
         except HTTPError as http_err:
@@ -196,7 +247,11 @@ def busquedaAvanzadaProveedor(request):
                 errores = response.json()
                 for error in errores:
                     formulario.add_error(error, errores[error])
-                return render(request, "proveedor/busqueda_avanzada_proveedor.html", {"formulario": formulario})
+                return render(
+                    request,
+                    "proveedor/busqueda_avanzada_proveedor.html",
+                    {"formulario": formulario},
+                )
             else:
                 return error_500(request)
         except Exception as err:
@@ -204,21 +259,34 @@ def busquedaAvanzadaProveedor(request):
             return error_500(request)
     else:
         formulario = BusquedaAvanzadaProveedorForm(None)
-    return render(request, "proveedor/busqueda_avanzada_proveedor.html", {"formulario": formulario})
+    return render(
+        request,
+        "proveedor/busqueda_avanzada_proveedor.html",
+        {"formulario": formulario},
+    )
+
 
 def proveedor_lista(request):
     token = request.session.get("token")
     headers = {"Authorization": f"Bearer {token}"}
-    response = requests.get("http://127.0.0.1:8080/api/v1/proveedores/proveedores_listar/", headers=headers)
+    response = requests.get(
+        "http://127.0.0.1:8080/api/v1/proveedores/proveedores_listar/", headers=headers
+    )
     proveedores = response.json()
-    return render(request, "proveedor/lista_proveedor.html", {"proveedores": proveedores})
+    return render(
+        request, "proveedor/lista_proveedor.html", {"proveedores": proveedores}
+    )
+
 
 def proveedor_crear(request):
     if request.method == "POST":
         try:
             formulario = ProveedoresForm(request.POST)
             token = request.session.get("token")
-            headers = {"Authorization": f"Bearer {token}", "Content-Type": "application/json"}
+            headers = {
+                "Authorization": f"Bearer {token}",
+                "Content-Type": "application/json",
+            }
             datos = formulario.data.copy()
             datos["proveedor"] = request.POST.get("proveedor")
             datos["telefono"] = request.POST.get("telefono")
@@ -239,7 +307,9 @@ def proveedor_crear(request):
                 errores = response.json()
                 for error in errores:
                     formulario.add_error(error, errores[error])
-                return render(request, "proveedor/crear.html", {"formulario": formulario})
+                return render(
+                    request, "proveedor/crear.html", {"formulario": formulario}
+                )
             else:
                 return error_500(request)
         except Exception as err:
@@ -248,6 +318,7 @@ def proveedor_crear(request):
     else:
         formulario = ProveedoresForm(None)
     return render(request, "proveedor/crear.html", {"formulario": formulario})
+
 
 def proveedores_editar_put(request, proveedor_id):
     datosFormulario = None
@@ -293,6 +364,7 @@ def proveedores_editar_put(request, proveedor_id):
         "proveedor/actualizar.html",
         {"formulario": formulario, "proveedor": proveedor},
     )
+
 
 def proveedores_editar_patch(request, proveedor_id):
     datosFormulario = None
@@ -694,10 +766,10 @@ def pedido_editar_put(request, pedido_id):
         datos["total_importe"] = request.POST.get("total_importe")
         datos["usuario"] = request.POST.get("usuario")
         datos["cliente"] = request.POST.get("cliente")
-        
-        token= request.session.get('token') 
+
+        token = request.session.get("token")
         cliente = cliente_api(
-            #env("OAUTH2_ACCESS_TOKEN"),
+            # env("OAUTH2_ACCESS_TOKEN"),
             token,
             "PUT",
             "pedido-metodopago/editar/" + str(pedido_id) + str("/"),
@@ -713,10 +785,10 @@ def pedido_editar_put(request, pedido_id):
                 return tratar_errores(request, cliente.codigoRespuesta)
 
             return render(
-        request,
-        "pedidoMetodoPago/actualizar.html",
-        {"formulario": formulario, "pedido": pedido},
-    )
+                request,
+                "pedidoMetodoPago/actualizar.html",
+                {"formulario": formulario, "pedido": pedido},
+            )
 
 
 def registrar_usuario(request):
@@ -724,8 +796,8 @@ def registrar_usuario(request):
         try:
             formulario = RegistroForm(request.POST)
             if formulario.is_valid():
-                
-                #se prepara el formulario para enviarlo a la API
+
+                # se prepara el formulario para enviarlo a la API
                 headers = {"Content-Type": "application/json"}
                 response = requests.post(
                     BASE_URL + "registrar/usuario",
@@ -770,17 +842,22 @@ def login(request):
     if request.method == "POST":
         formulario = LoginForm(request.POST)
         try:
+            # enviamos los datos al servidor para tener el token
             token_acceso = helper.obtener_token_session(
                 formulario.data.get("username"), formulario.data.get("password")
             )
             request.session["token"] = token_acceso
 
             headers = {"Authorization": "Bearer " + token_acceso}
+
+            # obtenemos los datos del usuario
             response = requests.get(
                 BASE_URL + "usuario/token/" + token_acceso,
                 headers=headers,
             )
             usuario = response.json()
+
+            # guardamos los datos en la sesion del usuario
             request.session["usuario"] = usuario
 
             return redirect("index")
@@ -797,6 +874,10 @@ def login(request):
 def logout(request):
     del request.session["token"]
     return redirect("index")
+
+
+def prueba_cors(request):
+    return render(request, "empleado/empleado_js.html")
 
 
 def tratar_errores(request, codigo):
