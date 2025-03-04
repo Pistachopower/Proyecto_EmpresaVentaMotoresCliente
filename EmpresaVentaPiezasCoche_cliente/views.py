@@ -267,12 +267,27 @@ def busquedaAvanzadaProveedor(request):
 
 
 def proveedor_lista(request):
-    token = request.session.get("token")
-    headers = {"Authorization": f"Bearer {token}"}
-    response = requests.get(
-        "http://127.0.0.1:8080/api/v1/proveedores/proveedores_listar/", headers=headers
-    )
+    try:
+        token = request.session.get("token")
+        headers = {"Authorization": f"Bearer {token}"}
+        response = requests.get(
+            "http://127.0.0.1:8080/api/v1/proveedores/proveedores_listar/", headers=headers
+        )
+    
+        if response.status_code == requests.codes.ok:
+            proveedores = response.json()
+            return render(
+            request, "proveedor/lista_proveedor.html", {"proveedores": proveedores}
+            )
+        else:
+            print(response.status_code)
+            response.raise_for_status()
+    except Exception as err:
+        print(f"Ocurrió un error: {err}")
+        return error_500(request)
+    
     proveedores = response.json()
+    
     return render(
         request, "proveedor/lista_proveedor.html", {"proveedores": proveedores}
     )
@@ -343,9 +358,8 @@ def proveedores_editar_put(request, proveedor_id):
         datos["correo"] = request.POST.get("correo")
         datos["direccion"] = request.POST.get("direccion")
         token = request.session.get("token")
-        headers = {"Authorization": f"Bearer {token}"}
         cliente = cliente_api(
-            env("OAUTH2_ACCESS_TOKEN"),
+            token ,
             "PUT",
             "proveedores/editar/" + str(proveedor_id) + str("/"),
             datos,
@@ -415,9 +429,7 @@ def proveedores_editar_patch(request, proveedor_id):
         "proveedor/actualizarNombreProveedor.html",
         {"formulario": formulario, "proveedor": proveedor},
     )
-    return render(
-        request, "proveedor/lista_proveedor.html", {"proveedores": proveedores}
-    )
+
 
 
 def proveedor_crear(request):
@@ -487,8 +499,9 @@ def proveedores_editar_put(request, proveedor_id):
         datos["telefono"] = request.POST.get("telefono")
         datos["correo"] = request.POST.get("correo")
         datos["direccion"] = request.POST.get("direccion")
+        token = request.session.get("token")
         cliente = cliente_api(
-            env("OAUTH2_ACCESS_TOKEN"),
+            token,
             "PUT",
             "proveedores/editar/" + str(proveedor_id) + str("/"),
             datos,
@@ -586,13 +599,31 @@ def proveedores_eliminar(request, proveedor_id):
 
 # post, patch, delete pedido metodopago
 def pedido_metodopago_lista(request):
-    headers = {
-        "Authorization": "Bearer " + env("OAUTH2_ACCESS_TOKEN"),
-        "Content-Type": "application/json",
-    }
-    response = requests.get(
-        "http://127.0.0.1:8080/api/v1/pedidos-lista/", headers=headers
-    )
+    try:
+        #obtenemos la session del usuario y con ello manejamos los permisos
+        token = request.session.get("token")
+        headers = {
+            "Authorization": "Bearer " + token,
+            "Content-Type": "application/json",
+        }
+        response = requests.get(
+            "http://127.0.0.1:8080/api/v1/pedidos-lista/", headers=headers
+        )
+
+        if response.status_code == requests.codes.ok:
+            pedidosMetPag = response.json()
+            return render(
+                request,
+                "pedidoMetodoPago/lista_pedidoMetodoPago.html",
+                {"pedidosMetPag": pedidosMetPag},
+            )
+        else:
+            print(response.status_code)
+            response.raise_for_status()
+    except Exception as err:
+        print(f"Ocurrió un error: {err}")
+        return error_500(request)
+
     # Transformamos la respuesta en json
     pedidosMetPag = response.json()
     return render(
@@ -784,11 +815,8 @@ def pedido_editar_put(request, pedido_id):
             else:
                 return tratar_errores(request, cliente.codigoRespuesta)
 
-            return render(
-                request,
-                "pedidoMetodoPago/actualizar.html",
-                {"formulario": formulario, "pedido": pedido},
-            )
+    return render(request,"pedidoMetodoPago/actualizar.html", {"formulario": formulario, "pedido": pedido},
+)
 
 
 def registrar_usuario(request):
@@ -801,6 +829,7 @@ def registrar_usuario(request):
                 headers = {"Content-Type": "application/json"}
                 response = requests.post(
                     BASE_URL + "registrar/usuario",
+                 
                     headers=headers,
                     data=json.dumps(formulario.cleaned_data),
                 )
