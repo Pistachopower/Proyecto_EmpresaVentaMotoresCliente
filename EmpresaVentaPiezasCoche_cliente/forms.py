@@ -1,6 +1,9 @@
 from django import forms
 from datetime import datetime, date
 from .helper import helper
+from django.contrib.auth.forms import UserCreationForm  # se usa para las sesiones
+from django.contrib.auth.models import User  # se usa para las sesiones
+from django.db import models
 
 
 class BusquedaEmpleadoForm(forms.Form):
@@ -150,3 +153,26 @@ class PedidoActualizarNombreForm(forms.Form):
         max_length=200,
         help_text="200 caracteres como máximo",
     )
+
+
+# Añadir la gestión de login, registro y logout usando la API (1 punto)
+class RegistroForm(UserCreationForm):
+    roles = (
+        (2, "empleado"),
+        (3, "cliente"),
+    )
+    rol = forms.ChoiceField(choices=roles)
+
+    nombre = forms.CharField(max_length=100)
+    telefono = forms.CharField(max_length=15)
+    correo = forms.EmailField(max_length=254)
+
+    class Meta:
+        # propiedades del user
+        model = User
+        fields = ("last_name", "password1", "password2", "username", "rol")
+
+
+class LoginForm(forms.Form):
+    username = forms.CharField()
+    password = forms.CharField(widget=forms.PasswordInput())

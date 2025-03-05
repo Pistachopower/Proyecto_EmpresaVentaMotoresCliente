@@ -83,3 +83,24 @@ class helper:
         pedido = response.json()
         return pedido
     
+    
+    #sesiones
+    def obtener_token_session(usuario,password):
+        token_url = 'http://127.0.0.1:8080/oauth2/token/'
+        data = {
+            'grant_type': 'password',
+            'username': usuario,
+            'password': password,
+            'client_id': 'EmpresaVentaPiezasCoche',
+            'client_secret': 'EmpresaVentaPiezasCoche',
+        }
+        #Envía todos los datos al servidor de autenticación.
+        response = requests.post(token_url, data=data)
+        
+        #Si la respuesta es exitosa, devuelve un token de acceso.
+        respuesta = response.json()
+        if response.status_code == 200:
+            return respuesta.get('access_token')
+        else:
+            raise Exception(respuesta.get("error_description"))
+    

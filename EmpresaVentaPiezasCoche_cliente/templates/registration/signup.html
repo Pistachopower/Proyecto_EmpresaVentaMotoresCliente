@@ -1,0 +1,50 @@
+{% extends "principal.html" %}
+
+{% block contenido %}
+<form action = "{% url 'registrar_usuario' %}" method = "post"> 
+    
+    {% load django_bootstrap5 %}
+    {% csrf_token %} 
+       
+    
+    <div class="mb-4">
+        {% bootstrap_field formulario.nombre show_label=True %}
+    </div>
+
+
+    <div class="mb-4">
+        {% bootstrap_field formulario.last_name show_label=True %}
+    </div>
+
+    <div class="mb-4">
+        {% bootstrap_field formulario.telefono show_label=True %}
+    </div>
+
+    <div class="mb-4">
+        {% bootstrap_field formulario.correo show_label=True %}
+    </div>
+
+    <div class="mb-4">
+        {% bootstrap_field formulario.username show_label=True %}
+    </div>
+
+
+    <div class="mb-4">
+        {% bootstrap_field formulario.password1 show_label=True %}
+    </div>
+
+    <div class="mb-4">
+        {% bootstrap_field formulario.password2 show_label=True %}
+    </div>
+
+
+    <div class="mb-4">
+        {% bootstrap_field formulario.rol show_label=True %}
+    </div>
+    
+
+
+
+    {% bootstrap_button "Enviar" button_type="submit" button_class="btn-primary" %}
+</form>
+{% endblock %}

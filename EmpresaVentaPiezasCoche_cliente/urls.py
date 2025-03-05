@@ -87,4 +87,9 @@ urlpatterns = [
         views.pedido_editar_put,
         name="pedido_editar_put",
     ),
+    # Sesiones
+    path("usuario/crear", views.registrar_usuario, name="registrar_usuario"),
+    path("login-usuario", views.login, name="login_usuario"),
+    path("logout-sesion", views.logout, name="logout_sesion"),
+    path("prueba-cors/", views.prueba_cors, name="prueba_cors"),
 ]

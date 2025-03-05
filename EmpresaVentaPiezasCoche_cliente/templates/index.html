@@ -1,45 +1,29 @@
 
 <html>
-    <head></head>
+    <head>
+        <title>MotorPartExpress</title>
+    </head>
     <body>
-    <h1>MotorPartExpress</h1>
+        <h1>MotorPartExpress</h1>
 
-    <h2>Listado de enlaces</h2>
-    <ul>
-        <a class="nav-link" href="{% url 'empleados' %}">Mostrar empleados</a>
-        <br>
-        <a class="nav-link" href="{% url 'empleados_mejorado' %}">Mostrar empleados avanzado</a>
-        <br>
-        <a class="nav-link" href="{% url 'cliente_mejorado' %}">Mostrar clientes avanzado</a>
-
-        <br>
-        <a class="nav-link" href="{% url 'pedido_mejorado' %}">Mostrar pedidos avanzado</a>
-
-        <br>
-        <a>Búsquedas: </a>
-        <br>
-        <a class="nav-link" href="{% url 'busquedaSimpleEmpleado' %}">Búsqueda simple empleados</a>
-        <br>
-        <a class="nav-link" href="{% url 'busquedaAvanzadaEmpleado' %}">Búsqueda avanzada empleados</a>
-        <br>
-        <a class="nav-link" href="{% url 'busquedaAvanzadaClientes' %}">Búsqueda avanzada cliente</a>
-        <br>
-        <a class="nav-link" href="{% url 'busquedaAvanzadaPedidos' %}">Búsqueda avanzada pedido</a>
-        <br>
-        <a class="nav-link" href="{% url 'busquedaAvanzadaProveedor' %}">Búsqueda avanzada proveedor</a>
-        <br>
-        
-        <h2>API REST PUT, PATCH, DELETE</h2>
-        <br>
-        <a class="nav-link" href="{% url 'proveedor_lista' %}">Mostrar proveedores</a>
-        <br>
-        <a class="nav-link" href="{% url 'proveedor_crear' %}">crear proveedores</a>
-        <br>
-
-        <a class="nav-link" href="{% url 'pedido_metodopago_lista' %}">Listar pedidos</a>
-        <br>
-        <a class="nav-link" href="{% url 'pedido_metodopago_crear' %}">crear pedido</a>
-        <br>
-        
-    </ul>
+        {% if isLogin %}
+            
+            <h2>API REST PUT, PATCH, DELETE</h2>
+            <ul>
+                <li><a class="nav-link" href="{% url 'proveedor_lista' %}">Mostrar proveedores</a></li>
+                <li><a class="nav-link" href="{% url 'pedido_metodopago_lista' %}">Mostrar pedidos</a></li>
+                <li><a class="nav-link" href="{% url 'proveedor_crear' %}">Crear proveedores</a></li>
+                <li><a class="nav-link" href="{% url 'pedido_metodopago_crear' %}">Crear pedido</a></li>
+                <li><a class="nav-link" href="{% url 'prueba_cors' %}">Prueba Cors</a></li>
+            </ul>
+            
+            <ul>
+                <li><a class="nav-link" href="{% url 'logout_sesion' %}">Cerrar sesión</a></li>
+            </ul>
+        {% else %}
+            <h2>No hay token disponible</h2>
+            <p>Para ver los enlaces y realizar operaciones, debe iniciar sesión.</p>
+            <a href="{% url 'login' %}">Iniciar sesión</a>
+        {% endif %}
+    </body>
 </html>
