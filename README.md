@@ -16,26 +16,16 @@ Modelo cliente, empleado, metodo pago, pedido, pieza motor, pieza motor pedido, 
 
 Empleado (rol 2)
 Este usuario puede:
-Modelo cliente: añadir, crear, actualizar, ver y borrar. 
+Modelo cliente: ver. 
 
-pedido: añadir, crear, actualizar, ver y borrar.
+proveedor: crear, actualizar, ver y borrar.
 
-metodo pago: ver
-
-pieza motor: ver
-
-pieza motor pedido: ver
-
-proveedor: añadir, crear, actualizar, ver y borrar.
+pedido: ver.
 
 
 Cliente (3)
 Este usuario puede:
 pedido: añadir, crear, actualizar, ver y borrar.
-
-pieza motor: ver
-
-pieza motor pedido: ver
 
 
 Cuentas de usuarios:
@@ -91,6 +81,9 @@ Foto de la api
 Luego en tu aplicacion Api colocar en la terminal el siguiente comando:
 Importante: client_id y client_secret lo sacas de la página de la Api. 
 curl -X POST "http://127.0.0.1:8080/oauth2/token/" -d "grant_type=password&username=USUARIO&password=CONTRASENA&client_id=EmpresaVentaPiezasCoche&client_secret=EmpresaVentaPiezasCoche"
+
+
+
 
 
 

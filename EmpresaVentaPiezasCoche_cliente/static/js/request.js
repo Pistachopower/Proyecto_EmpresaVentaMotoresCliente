@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", function () {
         dataList.innerHTML = "";  // Limpiar lista antes de agregar nuevos datos
         data.forEach(item => {
             const li = document.createElement("li");
-            li.textContent = `ID: ${item.id}, Nombre: ${item.empleado}`;  // Ajusta según la estructura de tu API
+            li.textContent = `ID: ${item.id}, Nombre: ${item.empleado}`;  
             dataList.appendChild(li);
         });
     })

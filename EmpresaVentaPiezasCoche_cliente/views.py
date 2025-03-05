@@ -61,7 +61,7 @@ def listar_pedido_mejorado(request):
     token = request.session.get("token")
     headers = {"Authorization": f"Bearer {token}"}
     response = requests.get(
-        "http://127.0.0.1:8081/api/v1/pedido_mejorado", headers=headers
+        "http://127.0.0.1:8080/api/v1/pedido_mejorado", headers=headers
     )
     pedido = response.json()
     return render(request, "pedido/lista_Mejorado.html", {"pedido_mejorado": pedido})
@@ -279,6 +279,8 @@ def proveedor_lista(request):
             return render(
             request, "proveedor/lista_proveedor.html", {"proveedores": proveedores}
             )
+        elif response.status_code == 403:
+            return error_403(request)
         else:
             print(response.status_code)
             response.raise_for_status()
@@ -294,6 +296,11 @@ def proveedor_lista(request):
 
 
 def proveedor_crear(request):
+    user= request.session.get('usuario')
+    
+    if user['rol'] == 'cliente':
+        return error_403(request)
+    
     if request.method == "POST":
         try:
             formulario = ProveedoresForm(request.POST)
@@ -432,48 +439,48 @@ def proveedores_editar_patch(request, proveedor_id):
 
 
 
-def proveedor_crear(request):
-    if request.method == "POST":
-        try:
-            formulario = ProveedoresForm(request.POST)
-            headers = {
-                "Authorization": "Bearer " + env("OAUTH2_ACCESS_TOKEN"),
-                "Content-Type": "application/json",
-            }
-            datos = formulario.data.copy()
-            datos["proveedor"] = request.POST.get("proveedor")
-            datos["telefono"] = request.POST.get("telefono")
-            datos["correo"] = request.POST.get("correo")
-            datos["direccion"] = request.POST.get("direccion")
+# def proveedor_crear(request):
+#     if request.method == "POST":
+#         try:
+#             formulario = ProveedoresForm(request.POST)
+#             headers = {
+#                 "Authorization": "Bearer " + env("OAUTH2_ACCESS_TOKEN"),
+#                 "Content-Type": "application/json",
+#             }
+#             datos = formulario.data.copy()
+#             datos["proveedor"] = request.POST.get("proveedor")
+#             datos["telefono"] = request.POST.get("telefono")
+#             datos["correo"] = request.POST.get("correo")
+#             datos["direccion"] = request.POST.get("direccion")
 
-            response = requests.post(
-                "http://127.0.0.1:8080/api/v1/proveedores/crear/",
-                headers=headers,
-                data=json.dumps(datos),
-            )
-            if response.status_code == requests.codes.ok:
-                return redirect("proveedor_lista")
-            else:
-                print(response.status_code)
-                response.raise_for_status()
-        except HTTPError as http_err:
-            print(f"Hubo un error en la petición: {http_err}")
-            if response.status_code == 400:
-                errores = response.json()
-                for error in errores:
-                    formulario.add_error(error, errores[error])
-                return render(
-                    request, "proveedor/crear.html", {"formulario": formulario}
-                )
-            else:
-                return error_500(request)
-        except Exception as err:
-            print(f"Ocurrió un error: {err}")
-            return error_500(request)
+#             response = requests.post(
+#                 "http://127.0.0.1:8080/api/v1/proveedores/crear/",
+#                 headers=headers,
+#                 data=json.dumps(datos),
+#             )
+#             if response.status_code == requests.codes.ok:
+#                 return redirect("proveedor_lista")
+#             else:
+#                 print(response.status_code)
+#                 response.raise_for_status()
+#         except HTTPError as http_err:
+#             print(f"Hubo un error en la petición: {http_err}")
+#             if response.status_code == 400:
+#                 errores = response.json()
+#                 for error in errores:
+#                     formulario.add_error(error, errores[error])
+#                 return render(
+#                     request, "proveedor/crear.html", {"formulario": formulario}
+#                 )
+#             else:
+#                 return error_500(request)
+#         except Exception as err:
+#             print(f"Ocurrió un error: {err}")
+#             return error_500(request)
 
-    else:
-        formulario = ProveedoresForm(None)
-    return render(request, "proveedor/crear.html", {"formulario": formulario})
+#     else:
+#         formulario = ProveedoresForm(None)
+#     return render(request, "proveedor/crear.html", {"formulario": formulario})
 
 
 def proveedores_editar_put(request, proveedor_id):
@@ -634,6 +641,12 @@ def pedido_metodopago_lista(request):
 
 
 def pedido_metodopago_crear(request):
+    
+    user= request.session.get('usuario')
+    
+    if user['rol'] == 'empleado':
+        return error_403(request)
+    
     if request.method == "POST":
         try:
             formulario = PedidosForm(request.POST)
@@ -675,6 +688,8 @@ def pedido_metodopago_crear(request):
                 return render(
                     request, "pedidoMetodoPago/crear.html", {"formulario": formulario}
                 )
+            elif response.status_code == 403:
+                return error_403(request)
             else:
                 return error_500(request)
         except Exception as err:
@@ -688,13 +703,17 @@ def pedido_metodopago_crear(request):
 
 def pedido_eliminar(request, pedido_id):
     try:
-        headers = crear_cabecera()
+        token= request.session.get('token')
+        headers = {"Authorization": f"Bearer {token}"}
         response = requests.delete(
             f"http://127.0.0.1:8080/api/v1/pedido/eliminar/{pedido_id}/",
             headers=headers,
         )
         if response.status_code == requests.codes.ok:
             return redirect("pedido_metodopago_lista")
+        
+        elif response.status_code == 403:
+            return error_403(request)
         else:
             print(response.status_code)
             response.raise_for_status()
@@ -721,8 +740,9 @@ def pedido_editar_patch(request, pedido_id):
     if request.method == "POST":
         try:
             formulario = PedidoActualizarNombreForm(request.POST)
-            headers = crear_cabecera()
             datos = request.POST.copy()
+            token= request.session.get('token')
+            headers = {"Authorization": f"Bearer {token}", "Content-Type": "application/json"}
             response = requests.patch(
                 f"{BASE_URL}pedido-metodopago/editar/nombre/{pedido_id}/",
                 headers=headers,
@@ -745,6 +765,9 @@ def pedido_editar_patch(request, pedido_id):
                     "pedidoMetodoPago/actualizarNombrePedido.html",
                     {"formulario": formulario, "pedido_id": pedido_id},
                 )
+            
+            elif response.status_code == 403:
+                return error_403(request)
             else:
                 return error_500(request)
         except Exception as err:
@@ -760,6 +783,7 @@ def pedido_editar_patch(request, pedido_id):
 
 def pedido_editar_put(request, pedido_id):
 
+    
     datosFormulario = None
     if request.method == "POST":
         datosFormulario = request.POST
@@ -912,13 +936,20 @@ def prueba_cors(request):
 def tratar_errores(request, codigo):
     if codigo == 404:
         return error_404(request)
+    
+    elif codigo == 403:
+        return error_403(request)
     else:
         return error_500(request)
+
 
 
 # Páginas de Error
 def error_404(request, exception=None):
     return render(request, "errores/404.html", None, None, 404)
+
+def error_403(request, exception=None):
+    return render(request, "errores/403.html", None, None, 403)
 
 
 # Páginas de Error
