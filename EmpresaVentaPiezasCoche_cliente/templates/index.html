@@ -7,23 +7,7 @@
         <h1>MotorPartExpress</h1>
 
         {% if isLogin %}
-            <h2>Listado de enlaces</h2>
-            <ul>
-                <li><a class="nav-link" href="{% url 'empleados' %}">Mostrar empleados</a></li>
-                <li><a class="nav-link" href="{% url 'empleados_mejorado' %}">Mostrar empleados avanzado</a></li>
-                <li><a class="nav-link" href="{% url 'cliente_mejorado' %}">Mostrar clientes avanzado</a></li>
-                <li><a class="nav-link" href="{% url 'pedido_mejorado' %}">Mostrar pedidos avanzado</a></li>
-            </ul>
-
-            <h3>Búsquedas:</h3>
-            <ul>
-                <li><a class="nav-link" href="{% url 'busquedaSimpleEmpleado' %}">Búsqueda simple empleados</a></li>
-                <li><a class="nav-link" href="{% url 'busquedaAvanzadaEmpleado' %}">Búsqueda avanzada empleados</a></li>
-                <li><a class="nav-link" href="{% url 'busquedaAvanzadaClientes' %}">Búsqueda avanzada clientes</a></li>
-                <li><a class="nav-link" href="{% url 'busquedaAvanzadaPedidos' %}">Búsqueda avanzada pedidos</a></li>
-                <li><a class="nav-link" href="{% url 'busquedaAvanzadaProveedor' %}">Búsqueda avanzada proveedor</a></li>
-            </ul>
-
+            
             <h2>API REST PUT, PATCH, DELETE</h2>
             <ul>
                 <li><a class="nav-link" href="{% url 'proveedor_lista' %}">Mostrar proveedores</a></li>
